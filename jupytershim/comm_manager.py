@@ -1,3 +1,5 @@
+from .comm import ZeppelinComm
+
 class ZeppelinCommManager:
 
     def __init__(self):

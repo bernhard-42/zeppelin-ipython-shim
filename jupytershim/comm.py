@@ -1,4 +1,5 @@
 from uuid import uuid4
+from . import jupyter_shim
 
 class ZeppelinComm:
     
@@ -10,7 +11,7 @@ class ZeppelinComm:
         self._closed = False
         self._close_callback = None
         self._msg_callback = None
-        self.jupyterShim = JupyterShim()
+        self.jupyterShim = jupyter_shim.JupyterShim()
         self.open(data, metadata)
 
     def _send(self, task, data, metadata):

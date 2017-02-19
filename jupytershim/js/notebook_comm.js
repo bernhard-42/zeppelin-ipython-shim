@@ -26,8 +26,6 @@ var ZeppelinNotebookComm = function(kernel, notebookId, wsServer) {
             console.log(data);
 
         } else if(data.task == "comm_msg") {
-            console.log("comm_msg:");
-            console.log(data);
             var msg = data.msg;
             that.kernel.comm_manager.comms[msg.comm_id].then(function(comm) {
                 comm.handle_msg({"content": msg}); 

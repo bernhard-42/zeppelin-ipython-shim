@@ -1,5 +1,10 @@
 from uuid import uuid4
 from os.path import dirname 
+from .notebook_comm import ZeppelinNotebookComm
+from .display_pub import ZeppelinDisplayPublisher
+from .comm import ZeppelinComm
+from .comm_manager import ZeppelinCommManager
+
 
 INTERACTIVE = False
 
