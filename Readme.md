@@ -2,15 +2,19 @@
 
 ## Terminal
 
-  cd websocket-server/
-  python3 websocketServer.py
+```bash
+cd websocket-server/
+python3 websocketServer.py
+```
 
 ## Zeppelin
 
-  import sys
-  sys.path += ["/path/to/this/folder"]
+```python
+import sys
+sys.path += ["/path/to/this/folder"]
 
-  from jupytershim import JupyterShim
+from jupytershim import JupyterShim
   
-  wsServer = "ws://<ws-server>:<port>"
-  j = JupyterShim(wsServer)
+wsServer = "ws://<ws-server>:<port>"
+j = JupyterShim(wsServer)
+```
