@@ -4,36 +4,40 @@ from .notebook_comm import ZeppelinNotebookComm
 from .display_pub import ZeppelinDisplayPublisher
 from .comm import ZeppelinComm
 from .comm_manager import ZeppelinCommManager
+from .kernel import Kernel
 
 
 INTERACTIVE = False
 
 class JupyterShim:
-    
+
     class _JupyterShim:
     
         def __init__(self, wsServer):
             self._loadJsLibs()
-            self.comm = ZeppelinNotebookComm(wsServer, self)
-            self.comm_manager = ZeppelinCommManager()
 
             from IPython.core.interactiveshell import InteractiveShell
-            InteractiveShell.instance().display_pub = ZeppelinDisplayPublisher(self)
+            ip = InteractiveShell.instance()
+            ip.display_pub = ZeppelinDisplayPublisher(self)
             
+            session = ZeppelinNotebookComm(wsServer, self)
+            commManager = ZeppelinCommManager()
+            kernel = Kernel(commManager, session)
+            ip.kernel = kernel
+
             import ipykernel.comm
             ipykernel.comm.Comm = ZeppelinComm
             ipykernel.comm.CommManager = ZeppelinCommManager
             
+            self.ip = ip
+
             print("JupyterShim initialized")
 
         def _loadJsLibs(self):
             scripts = "<script>"
-            if INTERACTIVE:
-                scripts += WSJS
-            else:
-                for script in ["comm.js", "comm_manager.js", "notebook_comm.js", "kernel.js", "notebook.js"]:
-                    scripts += open("%s/js/%s" % (dirname(__file__), script), "r").read()
-                    scripts += "\n"
+            for script in ["comm.js", "comm_manager.js", "notebook_comm.js", "notebook.js", "kernel.js"]:
+                scripts += open("%s/js/%s" % (dirname(__file__), script), "r").read()
+                scripts += "\n"
 
             scripts += "</script>"
             self._print(scripts, True)
@@ -46,13 +50,17 @@ class JupyterShim:
             wrapper = "<script>" + script + "</script>"
             self._print(wrapper, header)
             
-        def publish(self, html, header=True, default=""):
+        def publish(self, html, header=True, default="", div_id=None):
+            if not div_id:
+                div_id = self.placeholder(header, default)
+            self.ip.kernel.session.send("publish", {"div_id":div_id, "html":html})
+            
+        def placeholder(self, header=True, default=""):
             div_id = str(uuid4())
             wrapper = '<div id="%s">%s</div>' % (div_id, default)
             self._print(wrapper, header)
-            self.comm.send("publish", {"div_id":div_id, "html":html})
-
-
+            return div_id
+            
     instance = None
 
     def __init__(self, wsServer="ws://localhost:9001"):
@@ -61,4 +69,3 @@ class JupyterShim:
 
     def __getattr__(self, name):
         return getattr(self.instance, name)
-

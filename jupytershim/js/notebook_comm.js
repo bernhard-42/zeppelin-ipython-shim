@@ -16,20 +16,20 @@ var ZeppelinNotebookComm = function(kernel, notebookId, wsServer) {
         var data = JSON.parse(event.data);
         if(data.task == "publish") {
             that.publish(data.msg.div_id, data.msg.html);
-
         } else if(data.task == "comm_open") {
             var msg = data.msg;
             that.kernel.comm_manager.new_comm(msg.target_name, msg.data, {}, msg.metadata, msg.comm_id)
-
         } else if(data.task == "comm_close") {
             console.log("comm_close:");
             console.log(data);
-
         } else if(data.task == "comm_msg") {
             var msg = data.msg;
             that.kernel.comm_manager.comms[msg.comm_id].then(function(comm) {
                 comm.handle_msg({"content": msg}); 
             });
+        } else {
+            console.log("UNHANDLED:");
+            console.log(data);
         }
     };
 
@@ -52,5 +52,3 @@ ZeppelinNotebookComm.prototype.publish = function(div_id, html) {
         div.innerHTML = html;
     }, 100);
 }
-
-

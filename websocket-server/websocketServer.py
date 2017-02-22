@@ -8,7 +8,10 @@ def new_client(client, server):
 
 
 def client_left(client, server):
-	print("Client(%d) disconnected" % client['id'])
+	if client is None:
+		print("An unknown client disconnected")
+	else:
+		print("Client(%d) disconnected" % client['id'])
 
 def log(js, id):
 	print("%s (%s / %d) sent:  '%s' %s" % (js['node'], js['notebook_id'], id, js['task'], js['msg']))

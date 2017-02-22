@@ -12,4 +12,3 @@ var Kernel = function (notebook, wsServer) {
 Kernel.prototype.send_shell_msg = function(msg_type, content, callbacks, metadata, buffers) {
   this.notebookComm.send(msg_type, content);
 }
-

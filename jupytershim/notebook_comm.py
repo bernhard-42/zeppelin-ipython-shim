@@ -32,7 +32,7 @@ class ZeppelinNotebookComm():
         
         self.jupyterShim._print(WSJS_TMPL % (self.notebookId, wsServer), True)
     
-    def send(self, task, msg):
+    def send(self, task, msg, buffers=None):
         self.ws.send(json.dumps({"notebook_id":self.notebookId, "task":task, "node":"interpreter", "msg":msg}))
         
     def receive(self):

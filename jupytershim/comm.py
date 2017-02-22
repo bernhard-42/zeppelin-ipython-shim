@@ -11,15 +11,15 @@ class ZeppelinComm:
         self._closed = False
         self._close_callback = None
         self._msg_callback = None
-        self.jupyterShim = jupyter_shim.JupyterShim()
+        self.kernel = jupyter_shim.JupyterShim().ip.kernel
         self.open(data, metadata)
 
     def _send(self, task, data, metadata):
         msg = {"comm_id":self.comm_id, "target_name":self.target_name, "data":data, "metadata":metadata}
-        self.jupyterShim.comm.send(task, msg)
+        self.kernel.session.send(task, msg)
 
     def open(self, data=None, metadata=None):
-        comm_manager = self.jupyterShim.comm_manager
+        comm_manager = self.kernel.comm_manager
         comm_manager.register_comm(self)
         self._send("comm_open", data, metadata)
 
@@ -28,7 +28,7 @@ class ZeppelinComm:
             self._closed = True
             self._send("comm_close", data, metadata)
 
-    def send(self, data=None, metadata=None):
+    def send(self, data=None, metadata=None, buffers=None):
         self._send("comm_msg", data, metadata)
 
     def on_close(self, callback):
@@ -44,4 +44,3 @@ class ZeppelinComm:
     def handle_msg(self, msg):
         if self._msg_callback:
             self._msg_callback(msg)
-

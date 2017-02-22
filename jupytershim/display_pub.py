@@ -24,4 +24,3 @@ class ZeppelinDisplayPublisher(DisplayPublisher):
             
     def clear_output(self, wait=False):
         pass
-        

@@ -61,5 +61,3 @@ CommManager.prototype.comm_msg = function(msg) {
   console.error("CommManager.comm_msg is not implemented yet")
   return None;
 };
-
-
