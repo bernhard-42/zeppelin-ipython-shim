@@ -71,6 +71,8 @@ git clone https://github.com/bernhard-42/zeppelin-ipython-shim.git
 In the Terminal
 
 ```bash
+pip install websocket-client websocket-server
+
 cd zeppelin-ipython-shim/websocket-server/
 python3 websocketServer.py
 ```
@@ -78,11 +80,13 @@ python3 websocketServer.py
 
 ### Use the Shim
 
+Ensure that the python module `websocket-client` is installed on the Zeppelin server machine
+
 In Zeppelin Notebook
 
 ```python
 import sys
-sys.path += ["/tmp/jupytershim"]
+sys.path += ["/tmp/zeppelin-ipython-shim"]
 
 from jupytershim import JupyterShim
   
