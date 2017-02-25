@@ -30,7 +30,7 @@ WSJS_TMPL = """
         
         window.__jupyter_notebook_watchers__.push($scope.$watch("__jupyter_comm_msg__", function(newValue, oldValue) {
             if(typeof(newValue) !== "undefined") {
-                console.info("__jupyter_comm_msg__: " + JSON.stringify(newValue));
+//                console.info("__jupyter_comm_msg__: " + JSON.stringify(newValue));
                 Jupyter.notebook.kernel.notebookComm.handleMsg(newValue);
             }
         }))
@@ -66,4 +66,4 @@ class ZeppelinNotebookComm:
         
     def reset(self):
         self.z.angularUnbind("__jupyter_comm_msg__")
-        self.id = 0    
+        self.id = 0

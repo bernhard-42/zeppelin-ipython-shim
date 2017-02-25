@@ -33,8 +33,28 @@ ZeppelinNotebookComm.prototype.send = function(task, msg) {
 
 ZeppelinNotebookComm.prototype.publish = function(div_id, html) {
     console.info("ZeppelinNotebookComm: publish " + div_id);
-    setTimeout(function(){
+
+    var counter = 0;
+
+    // Sometimes the communication call is faster than printing the DIV, so retry ...
+    var retryId = setInterval(function() {
         div = document.getElementById(div_id);
-        div.innerHTML = html;
-    }, 100);
+        if (div !== null) {
+            clearInterval(retryId);
+
+            // add html, script or html+script
+            div.innerHTML = html;
+
+            // Force execution of all scripts
+            scripts = div.getElementsByTagName("script");
+            for(script of scripts) {
+                eval(script.innerHTML);
+            }
+        }
+
+        // maximum 2 seconds
+        if (counter == 10) {
+            clearInterval(retryId);
+        }
+    }, 200);
 }

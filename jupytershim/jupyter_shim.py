@@ -36,15 +36,22 @@ class JupyterShim:
                 scripts += open("%s/js/%s" % (dirname(__file__), script), "r").read()
                 scripts += "\n"
             scripts += "</script>"
-            self._print(scripts, True)
+            self._print(scripts, header=True, delayed=False)
 
             
-        def _print(self, html, header=False):
-            if header: print("%angular")
-            print(html)
+        def _print(self, html, header=False, delayed=True):
+            if header:
+                print("%angular")
+            if delayed:
+                div_id = str(uuid4())
+                wrapper = '<div id="%s"></div>' % div_id
+                print(wrapper)
+                self.ip.kernel.session.send("publish", {"div_id":div_id, "html":html})
+            else:
+                print(html)
         
         def _printJs(self, script, header=False):
-            wrapper = "<script>" + script + "</script>"
+            wrapper = '<script type="text/javascript">' + script + '</script>'
             self._print(wrapper, header)
 
     instance = None
