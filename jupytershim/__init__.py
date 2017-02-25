@@ -1,1 +1,1 @@
-from .jupyter_shim import JupyterShim
+from .jupyter_shim import JupyterShim, jupyterReset

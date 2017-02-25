@@ -5,36 +5,65 @@ import time
 
 WSJS_TMPL = """
 <script>
-if(window._jupyter_comms == null) {
-    window._jupyter_comms = {"comm": null, "notebookIds": []};
-}
+    var execution_id = "%s";                                                 // Zeppelin double print workaround
+    if(window.__zeppelin_already_executed__ == null) {                       // Zeppelin double print workaround
+        window.__zeppelin_already_executed__ = [];                           // Zeppelin double print workaround
+    }                                                                        // Zeppelin double print workaround
+    if(!window.__zeppelin_already_executed__.includes(execution_id)) {       // Zeppelin double print workaround
 
-var notebook_id = "%s";
-var wsServer = "%s";
+        var $scope = angular.element(document.getElementById("%s")).scope();
 
-if(!window._jupyter_comms.notebookIds.includes(notebook_id)) {
-    Jupyter = {}
-    Jupyter.notebook = new Notebook(Jupyter, notebook_id, wsServer);
-    window._jupyter_comms.notebookIds.push(notebook_id);
-}
+        if(typeof(window.__jupyter_notebook_watchers__) !== "undefined") {
+            console.info("NoteboooComm: cancel watchers");
+            for(unwatch of window.__jupyter_notebook_watchers__) {
+                unwatch();
+            }
+        }
+
+        if((typeof(Jupyter) === "undefined") || (Jupyter === null)) {
+            console.info("Initiate Javascript Notebook Comms");
+            Jupyter = {};
+            Jupyter.notebook = new Notebook(Jupyter);
+        }
+
+        window.__jupyter_notebook_watchers__ = [];
+        
+        window.__jupyter_notebook_watchers__.push($scope.$watch("__jupyter_comm_msg__", function(newValue, oldValue) {
+            if(typeof(newValue) !== "undefined") {
+                console.info("__jupyter_comm_msg__: " + JSON.stringify(newValue));
+                Jupyter.notebook.kernel.notebookComm.handleMsg(newValue);
+            }
+        }))
+
+        window.__zeppelin_already_executed__.push(execution_id);             // Zeppelin double print workaround
+    } else {
+        console.info("zeppelin bug, angular script already executed, skipped");
+    }
 </script>
 """
 
-class ZeppelinNotebookComm():
-    
-    def __init__(self, wsServer, jupyterShim):
-        self.notebookId = str(uuid4())
-        self.jupyterShim = jupyterShim
-        self.ws = WebSocket()
-        self.ws.connect(wsServer)
-        self.send("init", "initialize")
-        time.sleep(0.1)
-        
-        self.jupyterShim._print(WSJS_TMPL % (self.notebookId, wsServer), True)
-    
-    def send(self, task, msg, buffers=None):
-        self.ws.send(json.dumps({"notebook_id":self.notebookId, "task":task, "node":"interpreter", "msg":msg}))
-        
-    def receive(self):
-        return self.ws.recv()
+class ZeppelinNotebookComm:
 
+    def __init__(self, jupyterShim, zeppelinContext, debug=False):
+        self.id = 0
+        self.z = zeppelinContext
+        self.jupyterShim = jupyterShim
+        self.notebookCommDivId = "__Jupyter_Notebook_Comm__"
+        self.reset()
+        
+        # div must exist before javascript below can be printed
+        print("""%%angular <div id="%s">Shim initialized (do not delete this paragraph)</div>""" % self.notebookCommDivId)
+        
+        if debug:
+            print("""%angular Debug: {{__jupyter_comm_msg__}}""")
+            
+        print("%angular") 
+        print(WSJS_TMPL % (str(uuid4()), self.notebookCommDivId))
+        
+    def send(self, task, msg):
+        self.id += 1
+        self.z.angularBind("__jupyter_comm_msg__", {"task":task, "msg":msg})
+        
+    def reset(self):
+        self.z.angularUnbind("__jupyter_comm_msg__")
+        self.id = 0    

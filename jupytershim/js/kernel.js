@@ -2,10 +2,10 @@
   *  class Kernel
   */
 
-var Kernel = function (notebook, wsServer) {
-  console.info("Kernel: init, wsServer: " + wsServer);
+var Kernel = function (notebook) {
+  console.info("Kernel: init");
   this.notebook = notebook;
-  this.notebookComm = new ZeppelinNotebookComm(this, notebook.notebook_id, wsServer);
+  this.notebookComm = new ZeppelinNotebookComm(this);
   this.comm_manager = new CommManager(this);
 }
 

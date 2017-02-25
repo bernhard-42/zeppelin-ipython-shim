@@ -2,9 +2,8 @@
   *  class Notebook
   */
 
-var Notebook = function (jupyter, notebook_id, wsServer) {
-  console.info("Notebook: init, notebookId: " + notebook_id + " wsServer: " + wsServer);
+var Notebook = function (jupyter) {
+  console.info("Notebook: init");
   this.jupyter = jupyter;
-  this.notebook_id = notebook_id;
-  this.kernel = new Kernel(this, wsServer);
+  this.kernel = new Kernel(this);
 }

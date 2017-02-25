@@ -5,7 +5,6 @@
 This involves 
 
 - Creating a Comm and CommManager class in python for the interpreter and in javascript for the notebook
-- Starting a small WebSocket based Forwarding server locally (neither in the python interpreter nor in the webbrowser a WebSocket Server can be started)
 - Monkey Patching IPython (for displaying in Zeppelin) and ipykernel (for communicating via the new classes and the external WebSocket Server)
 
         from IPython.core.interactiveshell import InteractiveShell
@@ -22,14 +21,14 @@ This involves
 
 
 ```
-Interpreter (Python) 								Notebook (Javascript)
---------------------                                ---------------------
-JupyterShim 										Jupyter
-NotebookComm										Notebook
-Kernel												Kernel
-CommManager											CommManager
-Comm					<==>	WebSocket   <==>	Comm
-								 Server
+Interpreter (Python) 								 		Notebook (Javascript)
+--------------------                                 		---------------------
+JupyterShim 										 		Jupyter
+ZeppelinNotebookComm								 		Notebook
+Kernel												 		Kernel
+CommManager											 		CommManager
+Comm					<==>	Zeppelin Angular   <==>		Comm
+								  Backend API
 ```
 
 ## 2 Supported Visualization libraries
@@ -66,21 +65,7 @@ cd /tmp
 git clone https://github.com/bernhard-42/zeppelin-ipython-shim.git
 ```
 
-### Start the local WebSockets based forwarding proxy
-
-In the Terminal
-
-```bash
-pip install websocket-client websocket-server
-
-cd zeppelin-ipython-shim/websocket-server/
-python3 websocketServer.py
-```
-
-
 ### Use the Shim
-
-Ensure that the python module `websocket-client` is installed on the Zeppelin server machine
 
 In Zeppelin Notebook
 
@@ -90,8 +75,7 @@ sys.path += ["/tmp/zeppelin-ipython-shim"]
 
 from jupytershim import JupyterShim
   
-wsServer = "ws://<ws-server>:<port>"
-j = JupyterShim(wsServer)
+j = JupyterShim(z.z)
 ```
 
 
@@ -108,7 +92,6 @@ j = JupyterShim(wsServer)
 ## 5 TODOs
 
 - bokeh "layout" method: sizing_mode='stretch_both' function not working
-- WebSocket Forward Proxy: Can it be moved to Zeppelin
 
 
 ## 6 Credits
