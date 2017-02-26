@@ -1,6 +1,6 @@
 .DS_Store
 *.pyc
-build
-build.sh
+build-inline
+build-inline.sh
 Untitled.ipynb
 .ipynb_checkpoints
