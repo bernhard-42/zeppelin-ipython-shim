@@ -1,6 +1,6 @@
 ## 1 Approach
 
-### Rebuild the Jupyter/IPython display/comm system in Zeppelin. 
+### 1.1 Rebuild the Jupyter/IPython display/comm system in Zeppelin. 
 
 This involves 
 
@@ -17,7 +17,7 @@ This involves
 - Creating an Jupyter object in the browser necessary for the notebook communication part
 
 
-### Class hierarchy:
+### 1.2 Object hierarchy:
 
 
 ```
@@ -31,9 +31,10 @@ Comm					<==>	Zeppelin Angular   <==>		Comm
 								  Backend API
 ```
 
+
 ## 2 Supported Visualization libraries
 
-### Bokeh (http://bokeh.pydata.org)
+### 2.1 Bokeh (http://bokeh.pydata.org)
 
 Supported features
 
@@ -56,30 +57,49 @@ As an example import [examples/JupyterShim Overview](examples/JupyterShim Overvi
 For some of the Bokeh Gallery plots see [examples/JupyterShim Bokeh Gallery](examples/JupyterShim Bokeh Gallery.json)
 
 
-## 3 Usage
+## 3 Installation
 
-### Clone the project
+Clone the project
 
 ```bash
-cd /tmp
 git clone https://github.com/bernhard-42/zeppelin-ipython-shim.git
 ```
 
-### Use the Shim
+Install the package 
+```bash
+cd /zeppelin-ipython-shim
+pip install .
+```
+
+To compile the minified javascript library, install `uglifyjs`:
+
+```bash
+npm install uglify-js -g
+```
+
+and minify the javascript files
+
+```bash
+./build.sh
+```
+
+
+## 4 Usage
 
 In Zeppelin Notebook
 
 ```python
-import sys
-sys.path += ["/tmp/zeppelin-ipython-shim"]
+from jupytershim import JupyterShim, resetJupyter
 
-from jupytershim import JupyterShim
-  
-j = JupyterShim(z.z)
+# To reset both the python JupyterShim singleton and the Javascript Jupyter object, 
+# uncomment the next line
+# resetJupyter()  
+
+j = JupyterShim(z.z, debug=False)
 ```
 
 
-## 4 Limitations:
+## 5 Limitations:
 
 - ipywidgets don't work and will not work
 - The shim only implements a one way communication from interpreter to notebook.
@@ -87,11 +107,6 @@ j = JupyterShim(z.z)
 	- layout sizing_mode 'stretch_both' not working
 	- mpl.toBokeh() not working
 	- Bokeh server not covered
-
-
-## 5 TODOs
-
-- bokeh "layout" method: sizing_mode='stretch_both' function not working
 
 
 ## 6 Credits
