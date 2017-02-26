@@ -16,6 +16,7 @@ This project creates a shim in [Apache Zeppelin](http://zeppelin.apache.org/) th
 As an example it uses Bokeh 0.12.4+ to visualise (`output_notebook`) or modify (`push_notebook`) plots inline in [Apache Zeppelin](http://zeppelin.apache.org/).
 
 
+
 ## 2 Installation
 
 Clone the project
@@ -43,6 +44,7 @@ and minify the javascript files
 ```
 
 
+
 ## 3 Usage
 
 In Zeppelin Notebook
@@ -55,6 +57,7 @@ from jupytershim import JupyterShim, resetJupyter
 
 j = JupyterShim(z.z, debug=False)
 ```
+
 
 
 ## 4 Supported Visualization libraries
@@ -82,6 +85,7 @@ As an example import [examples/JupyterShim Overview](examples/JupyterShim Overvi
 For some of the Bokeh Gallery plots see [examples/JupyterShim Bokeh Gallery](examples/JupyterShim Bokeh Gallery.json)
 
 
+
 ## 5 Limitations:
 
 - The shim only implements a one way communication from interpreter to notebook.
@@ -90,6 +94,7 @@ For some of the Bokeh Gallery plots see [examples/JupyterShim Bokeh Gallery](exa
   - mpl.toBokeh() not working
   - Bokeh server not covered
 - *ipywidgets* don't work and might never work
+
 
 
 ## 6 Approach
@@ -127,6 +132,7 @@ Comm                    <==>    Zeppelin Angular   <==>     Comm
 ```
 
 
+
 ## 7 Credits
 
 As a shim für jupyter and ipython, the code in this project is based on the python modules
@@ -134,6 +140,7 @@ As a shim für jupyter and ipython, the code in this project is based on the pyt
 - [IPython](https://github.com/ipython/ipython): python display function (=> [license](https://github.com/ipython/ipython/blob/master/COPYING.rst))
 - [Jupyter notebook](https://github.com/jupyter/notebook): javascript classes Comm and CommManager (=> [license](https://github.com/jupyter/notebook/blob/master/COPYING.md))
 - [ipykernel](https://github.com/ipython/ipykernel): python classes Comm and CommManager (=> [license](https://github.com/ipython/ipykernel/blob/master/COPYING.md))
+
 
 
 ## 8 License
