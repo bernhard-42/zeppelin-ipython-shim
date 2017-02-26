@@ -54,11 +54,16 @@ In Zeppelin Notebook
 from jupytershim import JupyterShim, resetJupyter
 
 # To reset both the python JupyterShim singleton and the Javascript Jupyter object, uncomment the next line
-# resetJupyter()  
+# resetJupyter(z.z)  
 
 j = JupyterShim(z.z, debug=False)
 ```
 
+In the next Paragraph start the shim (note: this cannot be done in the paragraph above)
+
+```bash
+j.start()
+```
 
 
 ## 4 Supported Visualization libraries

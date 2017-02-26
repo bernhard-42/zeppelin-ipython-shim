@@ -27,13 +27,13 @@ class JupyterShim:
     
         def __init__(self, zeppelinContext, debug=False):
             self.zeppelinContext = zeppelinContext
-            
+            self.debug = debug
             self._loadJsLibs()
-
+            
             from IPython.core.interactiveshell import InteractiveShell
             self.ip = InteractiveShell.instance()
             
-            session = ZeppelinNotebookComm(self, zeppelinContext, debug)
+            session = ZeppelinNotebookComm(self, self.zeppelinContext, self.debug)
             commManager = ZeppelinCommManager()
             kernel = Kernel(commManager, session)
             self.ip.kernel = kernel
@@ -44,8 +44,12 @@ class JupyterShim:
 
             self.ip.display_pub = ZeppelinDisplayPublisher(self)
 
+        def start(self):
+            self.ip.kernel.session.start()
+            
         def _loadJsLibs(self):
-            jsScript = open("%s/js/jupytershim-min.js" % dirname(__file__), "r").read() + "\n"
+            # jsScript = open("%s/js/jupytershim-min.js" % dirname(__file__), "r").read() + "\n"
+            jsScript = WSJS;
             self._printJs(jsScript, header=True, delayed=False)
             
         def _print(self, html, header=False, delayed=True):

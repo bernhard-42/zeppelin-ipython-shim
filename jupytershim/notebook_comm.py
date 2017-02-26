@@ -10,7 +10,6 @@ WSJS_TMPL = """
         window.__zeppelin_already_executed__ = [];                           // Zeppelin double print workaround
     }                                                                        // Zeppelin double print workaround
     if(!window.__zeppelin_already_executed__.includes(execution_id)) {       // Zeppelin double print workaround
-
         var $scope = angular.element(document.getElementById("%s")).scope();
 
         if(typeof(window.__jupyter_notebook_unwatchers__) !== "undefined") {
@@ -28,13 +27,13 @@ WSJS_TMPL = """
         }
 
         window.__jupyter_notebook_unwatchers__ = [];
-        
         var unwatch = $scope.$watch("__jupyter_comm_msg__", function(newValue, oldValue, scope) {
             if(typeof(newValue) !== "undefined") {
                 // console.info("__jupyter_comm_msg__: " + JSON.stringify(newValue));
                 Jupyter.notebook.kernel.notebookComm.handleMsg(newValue);
             }
         }, true)
+
         window.__jupyter_notebook_unwatchers__.push(unwatch)
 
         window.__zeppelin_already_executed__.push(execution_id);             // Zeppelin double print workaround
@@ -49,18 +48,22 @@ class ZeppelinNotebookComm:
     def __init__(self, jupyterShim, zeppelinContext, debug=False):
         self.id = 0
         self.z = zeppelinContext
+        self.debug = debug
         self.jupyterShim = jupyterShim
         self.notebookCommDivId = "__Jupyter_Notebook_Comm__"
         self.reset()
-        
+
         # div must exist before javascript below can be printed
-        print("""%%angular <div id="%s">Shim initialized (do not delete this paragraph)</div>""" % self.notebookCommDivId)
-        
-        if debug:
+        self.z.angularBind("__jupyter_comm_status__", "")
+        print("""%%angular <div id="%s">{{__jupyter_comm_status__}}</div>\n""" % self.notebookCommDivId)
+
+    def start(self):
+        if self.debug:
             print("""%angular Debug: {{__jupyter_comm_msg__}}""")
-            
+
         print("%angular") 
         print(WSJS_TMPL % (str(uuid4()), self.notebookCommDivId))
+        self.z.angularBind("__jupyter_comm_status__", "Shim initialized (do not delete this paragraph)")
         
     def send(self, task, msg):
         self.id += 1
