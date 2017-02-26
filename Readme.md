@@ -15,6 +15,7 @@ This project creates a shim in [Apache Zeppelin](http://zeppelin.apache.org/) th
 
 As an example it uses Bokeh 0.12.4+ to visualise (`output_notebook`) or modify (`push_notebook`) plots inline in [Apache Zeppelin](http://zeppelin.apache.org/).
 
+Tested with Python 2.7 (Ubuntu 16.10) and Python 3.5 (as of Anaconda3 4.2).
 
 
 ## 2 Installation
