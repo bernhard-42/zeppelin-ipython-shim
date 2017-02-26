@@ -48,8 +48,7 @@ class JupyterShim:
             self.ip.kernel.session.start()
             
         def _loadJsLibs(self):
-            # jsScript = open("%s/js/jupytershim-min.js" % dirname(__file__), "r").read() + "\n"
-            jsScript = WSJS;
+            jsScript = open("%s/js/jupytershim-min.js" % dirname(__file__), "r").read() + "\n"
             self._printJs(jsScript, header=True, delayed=False)
             
         def _print(self, html, header=False, delayed=True):
