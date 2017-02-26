@@ -13,7 +13,12 @@
 # limitations under the License.
 
 from uuid import uuid4
-from . import jupyter_shim
+import sys
+if sys.version_info.major == 2:
+    import jupyter_shim
+else:
+    from . import jupyter_shim
+
 
 class ZeppelinComm:
     
