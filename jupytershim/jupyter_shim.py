@@ -61,7 +61,7 @@ class JupyterShim:
         
         def _printJs(self, script, header=False, delayed=True):
             wrapper = '<script type="text/javascript">' + script + '</script>'
-            self._print(wrapper, header)
+            self._print(wrapper, header, delayed)
 
     instance = None
 
