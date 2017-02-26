@@ -1,4 +1,4 @@
-# Jupyter/IPython display and comm shim for Apache Zeppelin
+# Jupyter/IPython display shim for Apache Zeppelin
 
 ## 1 Overview
 
@@ -134,4 +134,22 @@ As a shim für jupyter and ipython, the code in this project is based on the pyt
 - [IPython](https://github.com/ipython/ipython): python display function (=> [license](https://github.com/ipython/ipython/blob/master/COPYING.rst))
 - [Jupyter notebook](https://github.com/jupyter/notebook): javascript classes Comm and CommManager (=> [license](https://github.com/jupyter/notebook/blob/master/COPYING.md))
 - [ipykernel](https://github.com/ipython/ipykernel): python classes Comm and CommManager (=> [license](https://github.com/ipython/ipykernel/blob/master/COPYING.md))
+
+
+## 8 License
+
+Copyright 2017 Bernhard Walter
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
 
