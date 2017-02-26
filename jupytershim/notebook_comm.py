@@ -29,12 +29,13 @@ WSJS_TMPL = """
 
         window.__jupyter_notebook_unwatchers__ = [];
         
-        window.__jupyter_notebook_unwatchers__.push($scope.$watch("__jupyter_comm_msg__", function(newValue, oldValue) {
+        var unwatch = $scope.$watch("__jupyter_comm_msg__", function(newValue, oldValue, scope) {
             if(typeof(newValue) !== "undefined") {
                 // console.info("__jupyter_comm_msg__: " + JSON.stringify(newValue));
                 Jupyter.notebook.kernel.notebookComm.handleMsg(newValue);
             }
-        }))
+        }, true)
+        window.__jupyter_notebook_unwatchers__.push(unwatch)
 
         window.__zeppelin_already_executed__.push(execution_id);             // Zeppelin double print workaround
     } else {

@@ -28,6 +28,8 @@ class JupyterShim:
         def __init__(self, zeppelinContext, debug=False):
             self.zeppelinContext = zeppelinContext
             
+            self._loadJsLibs()
+
             from IPython.core.interactiveshell import InteractiveShell
             self.ip = InteractiveShell.instance()
             
@@ -39,8 +41,6 @@ class JupyterShim:
             import ipykernel.comm
             ipykernel.comm.Comm = ZeppelinComm
             ipykernel.comm.CommManager = ZeppelinCommManager
-
-            self._loadJsLibs()
 
             self.ip.display_pub = ZeppelinDisplayPublisher(self)
 
@@ -73,6 +73,8 @@ class JupyterShim:
         return getattr(self.instance, name)
 
 
-def jupyterReset():
-    print("%angular <script>Jupyter=null;</script>")
+def jupyterReset(zeppelinContext):
     JupyterShim.instance = None
+    zeppelinContext.angularBind("__jupyter_comm_msg__", "")
+    zeppelinContext.angularUnbind("__jupyter_comm_msg__")
+    print("%angular <script>Jupyter=null;</script>")
