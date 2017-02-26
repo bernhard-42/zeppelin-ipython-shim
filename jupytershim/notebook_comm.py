@@ -17,7 +17,7 @@ WSJS_TMPL = """
             console.info("NoteboooComm: cancel watchers");
             var unwatchers = window.__jupyter_notebook_unwatchers__
             for(i in unwatchers) {
-                unwatcher[i]();
+                unwatchers[i]();
             }
         }
 
