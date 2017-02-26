@@ -47,8 +47,8 @@ ZeppelinNotebookComm.prototype.publish = function(div_id, html) {
 
             // Force execution of all scripts
             scripts = div.getElementsByTagName("script");
-            for(script of scripts) {
-                eval(script.innerHTML);
+            for(i in scripts) {
+                eval(scripts[i].innerHTML);
             }
         }
 

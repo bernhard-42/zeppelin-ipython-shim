@@ -12,32 +12,27 @@ class JupyterShim:
     class _JupyterShim:
     
         def __init__(self, zeppelinContext, debug=False):
-            self._loadJsLibs()
             self.zeppelinContext = zeppelinContext
             
             from IPython.core.interactiveshell import InteractiveShell
-            ip = InteractiveShell.instance()
-            ip.display_pub = ZeppelinDisplayPublisher(self)
+            self.ip = InteractiveShell.instance()
             
             session = ZeppelinNotebookComm(self, zeppelinContext, debug)
             commManager = ZeppelinCommManager()
             kernel = Kernel(commManager, session)
-            ip.kernel = kernel
+            self.ip.kernel = kernel
 
             import ipykernel.comm
             ipykernel.comm.Comm = ZeppelinComm
             ipykernel.comm.CommManager = ZeppelinCommManager
-            
-            self.ip = ip
+
+            self._loadJsLibs()
+
+            self.ip.display_pub = ZeppelinDisplayPublisher(self)
 
         def _loadJsLibs(self):
-            scripts = "<script>"
-            for script in ["comm.js", "comm_manager.js", "notebook_comm.js", "notebook.js", "kernel.js"]:
-                scripts += open("%s/js/%s" % (dirname(__file__), script), "r").read()
-                scripts += "\n"
-            scripts += "</script>"
-            self._print(scripts, header=True, delayed=False)
-
+            jsScript = open("%s/js/jupyershim-min.js" % dirname(__file__), "r").read() + "\n"
+            self._printJs(jsScript, header=True, delayed=False)
             
         def _print(self, html, header=False, delayed=True):
             if header:
@@ -50,7 +45,7 @@ class JupyterShim:
             else:
                 print(html)
         
-        def _printJs(self, script, header=False):
+        def _printJs(self, script, header=False, delayed=True):
             wrapper = '<script type="text/javascript">' + script + '</script>'
             self._print(wrapper, header)
 
