@@ -135,7 +135,7 @@ Comm                    <==>    Zeppelin Angular   <==>     Comm
 
 ## 7 Credits
 
-As a shim für jupyter and ipython, the code in this project is based on the python modules
+As a shim for jupyter and ipython, the code in this project is based on the python modules
 
 - [IPython](https://github.com/ipython/ipython): python display function (=> [license](https://github.com/ipython/ipython/blob/master/COPYING.rst))
 - [Jupyter notebook](https://github.com/jupyter/notebook): javascript classes Comm and CommManager (=> [license](https://github.com/jupyter/notebook/blob/master/COPYING.md))
