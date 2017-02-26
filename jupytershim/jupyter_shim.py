@@ -31,7 +31,7 @@ class JupyterShim:
             self.ip.display_pub = ZeppelinDisplayPublisher(self)
 
         def _loadJsLibs(self):
-            jsScript = open("%s/js/jupyershim-min.js" % dirname(__file__), "r").read() + "\n"
+            jsScript = open("%s/js/jupytershim-min.js" % dirname(__file__), "r").read() + "\n"
             self._printJs(jsScript, header=True, delayed=False)
             
         def _print(self, html, header=False, delayed=True):
