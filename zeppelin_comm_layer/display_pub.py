@@ -16,8 +16,8 @@ from IPython.core.displaypub import DisplayPublisher
 
 class ZeppelinDisplayPublisher(DisplayPublisher):
 
-    def __init__(self, jupyterShim):
-        self.jupyterShim = jupyterShim
+    def __init__(self, zeppelinCommLayer):
+        self.zeppelinCommLayer = zeppelinCommLayer
  
     def publish(self, data, metadata=None, source=None):
         doc = {}
@@ -28,12 +28,12 @@ class ZeppelinDisplayPublisher(DisplayPublisher):
             else:
                 html = d.get("text/html")
                 if html is not None: 
-                    self.jupyterShim._print(html, header)
+                    self.zeppelinCommLayer._print(html, header)
                     header = False
                     
                 js = d.get("application/javascript")
                 if js is not None: 
-                    self.jupyterShim._printJs(js, header)
+                    self.zeppelinCommLayer._printJs(js, header)
                     header = False
             
     def clear_output(self, wait=False):

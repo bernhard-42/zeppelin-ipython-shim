@@ -21,9 +21,9 @@ from .comm_manager import ZeppelinCommManager
 from .kernel import Kernel
 
 
-class JupyterShim:
+class ZeppelinCommLayer:
 
-    class _JupyterShim:
+    class _ZeppelinCommLayer:
     
         def __init__(self, zeppelinContext, debug=False):
             self.zeppelinContext = zeppelinContext
@@ -48,7 +48,7 @@ class JupyterShim:
             self.ip.kernel.session.start()
             
         def _loadJsLibs(self):
-            jsScript = open("%s/js/jupytershim-min.js" % dirname(__file__), "r").read() + "\n"
+            jsScript = open("%s/js/zeppelin_comm_layer-min.js" % dirname(__file__), "r").read() + "\n"
             self._printJs(jsScript, header=True, delayed=False)
             
         def _print(self, html, header=False, delayed=True):
@@ -69,15 +69,15 @@ class JupyterShim:
     instance = None
 
     def __init__(self, zeppelinContext=None, debug=False):
-        if not JupyterShim.instance:
-            JupyterShim.instance = JupyterShim._JupyterShim(zeppelinContext, debug)
+        if not ZeppelinCommLayer.instance:
+            ZeppelinCommLayer.instance = ZeppelinCommLayer._ZeppelinCommLayer(zeppelinContext, debug)
             
     def __getattr__(self, name):
         return getattr(self.instance, name)
 
 
-def jupyterReset(zeppelinContext):
-    JupyterShim.instance = None
-    zeppelinContext.angularBind("__jupyter_comm_msg__", "")
-    zeppelinContext.angularUnbind("__jupyter_comm_msg__")
+def resetZeppelinCommLayer(zeppelinContext):
+    ZeppelinCommLayer.instance = None
+    zeppelinContext.angularBind("__zeppelin_comm_msg__", "")
+    zeppelinContext.angularUnbind("__zeppelin_comm_msg__")
     print("%angular <script>Jupyter=null;</script>")

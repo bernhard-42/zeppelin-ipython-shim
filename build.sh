@@ -1,11 +1,11 @@
-mkdir -p jupytershim/js
+mkdir -p zeppelin_comm_layer/js
 
-uglifyjs jupytershim/js-src/comm.js \
-         jupytershim/js-src/comm_manager.js \
-         jupytershim/js-src/notebook_comm.js \
-         jupytershim/js-src/kernel.js \
-         jupytershim/js-src/notebook.js \
-         -o jupytershim/js/jupytershim-min.js \
-         --source-map jupytershim/js/jupytershim-min.js.map \
+uglifyjs zeppelin_comm_layer/js-src/comm.js \
+         zeppelin_comm_layer/js-src/comm_manager.js \
+         zeppelin_comm_layer/js-src/notebook_comm.js \
+         zeppelin_comm_layer/js-src/kernel.js \
+         zeppelin_comm_layer/js-src/notebook.js \
+         -o zeppelin_comm_layer/js/zeppelin_comm_layer-min.js \
+         --source-map zeppelin_comm_layer/js/zeppelin_comm_layer-min.js.map \
          -p 1
 

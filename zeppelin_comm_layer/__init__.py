@@ -12,4 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .jupyter_shim import JupyterShim, jupyterReset
+from .zeppelin_comm_layer import ZeppelinCommLayer, resetZeppelinCommLayer

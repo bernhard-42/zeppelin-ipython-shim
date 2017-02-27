@@ -15,9 +15,9 @@
 from uuid import uuid4
 import sys
 if sys.version_info.major == 2:
-    import jupyter_shim
+    import zeppelin_comm_layer
 else:
-    from . import jupyter_shim
+    from . import zeppelin_comm_layer
 
 
 class ZeppelinComm:
@@ -30,7 +30,7 @@ class ZeppelinComm:
         self._closed = False
         self._close_callback = None
         self._msg_callback = None
-        self.kernel = jupyter_shim.JupyterShim().ip.kernel
+        self.kernel = zeppelin_comm_layer.ZeppelinCommLayer().ip.kernel
         self.open(data, metadata)
 
     def _send(self, task, data, metadata):

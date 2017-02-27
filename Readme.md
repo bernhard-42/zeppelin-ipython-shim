@@ -51,18 +51,18 @@ and minify the javascript files
 In Zeppelin Notebook
 
 ```python
-from jupytershim import JupyterShim, resetJupyter
+from zeppelin_comm_layer import ZeppelinCommLayer, resetZeppelinCommLayer
 
-# To reset both the python JupyterShim singleton and the Javascript Jupyter object, uncomment the next line
-# resetJupyter(z.z)  
+# To reset both the python ZeppelinCommLayer singleton and the Javascript Jupyter object, uncomment the next line
+# resetZeppelinCommLayer(z.z)  
 
-j = JupyterShim(z.z, debug=False)
+zcl = ZeppelinCommLayer(z.z, debug=False)
 ```
 
 In the next Paragraph start the shim (note: this cannot be done in the paragraph above)
 
 ```bash
-j.start()
+zcl.start()
 ```
 
 
@@ -86,9 +86,9 @@ Supported features
 
 - Bokeh Javascript Widgets interacting with the plot
 
-As an example import [examples/JupyterShim Overview](examples/JupyterShim Overview.json) into Zeppelin
+As an example import [examples/ZeppelinCommLayer Overview](examples/ZeppelinCommLayer Overview.json) into Zeppelin
 
-For some of the Bokeh Gallery plots see [examples/JupyterShim Bokeh Gallery](examples/JupyterShim Bokeh Gallery.json)
+For some of the Bokeh Gallery plots see [examples/ZeppelinCommLayer Bokeh Gallery](examples/ZeppelinCommLayer Bokeh Gallery.json)
 
 
 
@@ -129,7 +129,7 @@ This involves
 ```
 Interpreter (Python)                                        Notebook (Javascript)
 --------------------                                        ---------------------
-JupyterShim                                                 Jupyter
+ZeppelinCommLayer                                           Jupyter
 ZeppelinNotebookComm                                        Notebook
 Kernel                                                      Kernel
 CommManager                                                 CommManager

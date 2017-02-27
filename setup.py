@@ -5,16 +5,16 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
-    name = "jupytershim",
+    name = "zeppelin_comm_layer",
     version = "0.1.0",
     author = "Bernhard Walter",
     author_email = "bwalter@gmail.com",
-    description = ("A shim of the Jupyter/IPython display/communication system "
+    description = ("A simulation of the Jupyter/IPython display/communication system "
                    "to allow libraries like Bokeh to run inline in Apache Zeppelin"),
     license = "Apache License 2.0",
     keywords = "zeppelin visualisations",
-    packages=['jupytershim'],
-    package_data={'jupytershim': ['js/*']},
+    packages=['zeppelin_comm_layer'],
+    package_data={'zeppelin_comm_layer': ['js/*']},
     long_description=read('Readme.md'),
     classifiers=[
         "Development Status :: 4 - Beta",
