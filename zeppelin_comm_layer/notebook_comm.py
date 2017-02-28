@@ -1,5 +1,4 @@
 from uuid import uuid4
-from websocket import WebSocket
 import json
 import time
 
