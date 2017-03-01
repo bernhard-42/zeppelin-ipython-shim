@@ -38,6 +38,7 @@ class ZeppelinCommLayer(with_metaclass(Singleton)):
         ipykernel.comm.Comm = ZeppelinComm
         ipykernel.comm.CommManager = ZeppelinCommManager
 
+        self.logger.debug("Setting IPython Display Manager")
         self.ip.display_pub = ZeppelinDisplayPublisher(self)
         return self
         
