@@ -15,17 +15,27 @@
   */
 
 /**
-  *  class ZeppelinNotebookComm
+  *  class ZeppelinSession
   */
 
-var ZeppelinNotebookComm = function(kernel) {
-    console.info("ZeppelinNotebookComm: init");
+var ZeppelinSession = function(kernel) {
+    console.info("ZeppelinSession: init");
     this.kernel = kernel;
 }   
 
-ZeppelinNotebookComm.prototype.handleMsg = function(data) {
+ZeppelinSession.prototype.handleMsg = function(data) {
     if(data.task == "publish") {
-        this.publish(data.msg.div_id, data.msg.html);
+        this.publish(data.msg.div_id, data.msg.html); 
+    } else if(data.task == "reset") {
+        console.log("cleaning watchers")
+        var unwatchers = window.__zeppelin_notebook_unwatchers__;
+        for(i in unwatchers) {
+            unwatchers[i]();
+        }
+        window.__zeppelin_notebook_unwatchers__ = [];
+        window.__zeppelin_already_executed__ = [];
+        console.log("Deleting Jupyter")
+        Jupyter = null;
     } else if(data.task == "comm_open") {
         var msg = data.msg;
         this.kernel.comm_manager.new_comm(msg.target_name, msg.data, {}, msg.metadata, msg.comm_id)
@@ -42,13 +52,13 @@ ZeppelinNotebookComm.prototype.handleMsg = function(data) {
     }
 }
 
-ZeppelinNotebookComm.prototype.send = function(task, msg) {
-    console.info("ZeppelinNotebookComm: send " + task);
-    this.zeppelinWS.send(JSON.stringify({"notebook_id":this.notebookId, "task": task, "node":"notebook", "msg":msg}));
+ZeppelinSession.prototype.send = function(task, msg) {
+    console.info("ZeppelinSession: send " + task);
+    console.error("Not implemented yet");
 }
 
-ZeppelinNotebookComm.prototype.publish = function(div_id, html) {
-    console.info("ZeppelinNotebookComm: publish " + div_id);
+ZeppelinSession.prototype.publish = function(div_id, html) {
+    console.info("ZeppelinSession: publish " + div_id);
 
     var counter = 0;
 

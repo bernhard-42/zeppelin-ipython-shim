@@ -77,3 +77,4 @@ Comm.prototype.handle_close = function (msg) {
     console.info("Comm: handle_close");
     this._callback('close', msg);
 };
+

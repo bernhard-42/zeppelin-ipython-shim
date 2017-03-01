@@ -56,7 +56,9 @@ from zeppelin_comm_layer import ZeppelinCommLayer, resetZeppelinCommLayer
 # To reset both the python ZeppelinCommLayer singleton and the Javascript Jupyter object, uncomment the next line
 # resetZeppelinCommLayer(z.z)  
 
-zcl = ZeppelinCommLayer(z.z, debug=False)
+# Note: Zeppelin Comm Layer is logging to %ZEPPELIN_LOG_DIR/zeppelin-interpreter-pyspark-comm-layer-$USERNAME-$HOSTNAME.log
+import logging
+zcl = ZeppelinCommLayer(z.z, debug=False, logLevel=logging.DEBUG)
 ```
 
 In the next Paragraph start the shim (note: this cannot be done in the paragraph above)
@@ -130,7 +132,7 @@ This involves
 Interpreter (Python)                                        Notebook (Javascript)
 --------------------                                        ---------------------
 ZeppelinCommLayer                                           Jupyter
-ZeppelinNotebookComm                                        Notebook
+ZeppelinSession                                             Notebook
 Kernel                                                      Kernel
 CommManager                                                 CommManager
 Comm                    <==>    Zeppelin Angular   <==>     Comm

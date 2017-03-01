@@ -13,10 +13,15 @@
 # limitations under the License.
 
 from IPython.core.displaypub import DisplayPublisher
+from .logger import Logger
+
 
 class ZeppelinDisplayPublisher(DisplayPublisher):
 
     def __init__(self, zeppelinCommLayer):
+        self.logger = Logger(self.__class__.__name__).get()
+        self.logger.info("New ZeppelinDisplayManager")
+            
         self.zeppelinCommLayer = zeppelinCommLayer
  
     def publish(self, data, metadata=None, source=None):
@@ -28,13 +33,16 @@ class ZeppelinDisplayPublisher(DisplayPublisher):
             else:
                 html = d.get("text/html")
                 if html is not None: 
+                    self.logger.debug("Publish html %s" % html)
                     self.zeppelinCommLayer._print(html, header)
                     header = False
                     
                 js = d.get("application/javascript")
                 if js is not None: 
+                    self.logger.debug("Publish javascript %s" % js)
                     self.zeppelinCommLayer._printJs(js, header)
                     header = False
             
     def clear_output(self, wait=False):
+        self.logger.debug("Clear output not implemented yet")
         pass

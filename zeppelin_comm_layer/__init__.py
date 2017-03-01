@@ -12,4 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .zeppelin_comm_layer import ZeppelinCommLayer, resetZeppelinCommLayer
+from .comm_layer import ZeppelinCommLayer, resetZeppelinCommLayer
