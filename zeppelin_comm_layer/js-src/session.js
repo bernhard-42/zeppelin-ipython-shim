@@ -38,12 +38,14 @@ ZeppelinSession.prototype.handleMsg = function(data) {
         Jupyter = null;
     } else if(data.task == "comm_open") {
         var msg = data.msg;
+        console.info("Open comm for target_name" + msg.target_name + "and comm id " + msg.comm_id);
         this.kernel.comm_manager.new_comm(msg.target_name, msg.data, {}, msg.metadata, msg.comm_id)
     } else if(data.task == "comm_close") {
         console.log("comm_close:");
         console.log(data);
     } else if(data.task == "comm_msg") {
         var msg = data.msg;
+        console.info("Message for comm id " + msg.comm_id);
         this.kernel.comm_manager.comms[msg.comm_id].then(function(comm) {
             comm.handle_msg({"content": msg}); 
         });
