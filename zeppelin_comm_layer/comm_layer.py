@@ -29,7 +29,7 @@ class ZeppelinCommLayer(with_metaclass(Singleton)):
         self.ip = InteractiveShell.instance()
         
         self.logger.debug("Patching InteractiveShell.kernel")
-        session = ZeppelinSession(self, self.zeppelinContext, logLevel=="DEBUG")
+        session = ZeppelinSession(self, self.zeppelinContext)
         commManager = ZeppelinCommManager().init()
         kernel = Kernel(commManager, session)
         self.ip.kernel = kernel
