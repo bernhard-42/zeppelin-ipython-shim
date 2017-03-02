@@ -21,26 +21,30 @@ from .logger import Logger
 WSJS_TMPL = """
 <script>
     var sessionCommVar = "%s";
-    var execution_id = "%s";                                                 // Zeppelin 0.7.0 double print workaround
-    if(window.__zeppelin_already_executed__ == null) {                       // Zeppelin 0.7.0 double print workaround
-        window.__zeppelin_already_executed__ = [];                           // Zeppelin 0.7.0 double print workaround
-    }                                                                        // Zeppelin 0.7.0 double print workaround
-    if(!window.__zeppelin_already_executed__.includes(execution_id)) {       // Zeppelin 0.7.0 double print workaround
-        var $scope = angular.element(document.getElementById("%s")).scope();
+    var sessionCommDivId = "%s"
+    var execution_id = "%s";                                                 // Avoid double execution
+    if(window.__zeppelin_already_executed__ == null) {                       //
+        window.__zeppelin_already_executed__ = [];                           //
+    }                                                                        //
+    if(!window.__zeppelin_already_executed__.includes(execution_id)) {       // Avoid double execution
+
+        console.log("Get scope for div id" + sessionCommDivId);
+        var $scope = angular.element(document.getElementById(sessionCommDivId)).scope();
 
         if(typeof(window.__zeppelin_notebook_unwatchers__) !== "undefined") {
-            console.info("NoteboooComm: cancel watchers");
+            console.info("NoteboooComm: Cancel watchers");
             var unwatchers = window.__zeppelin_notebook_unwatchers__
             for(i in unwatchers) {
                 unwatchers[i]();
             }
         }
+        window.__zeppelin_notebook_unwatchers__ = [];
 
-        console.info("Initiate Javascript Notebook Comms");
+        console.info("Initiate Javascript Notebook Comms for divId " + sessionCommDivId);
         Jupyter = {};
         Jupyter.notebook = new Notebook(Jupyter);
 
-        window.__zeppelin_notebook_unwatchers__ = [];
+        console.info("Install Angular watcher for session comm var " + sessionCommVar);
         var unwatch = $scope.$watch(sessionCommVar, function(newValue, oldValue, scope) {
             if(typeof(newValue) !== "undefined") {
                 // console.info(sessionCommVar + ": " + JSON.stringify(newValue));
@@ -50,7 +54,7 @@ WSJS_TMPL = """
 
         window.__zeppelin_notebook_unwatchers__.push(unwatch)
 
-        window.__zeppelin_already_executed__.push(execution_id);             // Zeppelin 0.7.0 double print workaround
+        window.__zeppelin_already_executed__.push(execution_id);             // Avoid double execution
     } else {
         console.info("Angular script already executed, skipped");
     }
@@ -59,13 +63,12 @@ WSJS_TMPL = """
 
 class ZeppelinSession:
 
-    def __init__(self, zeppelinCommLayer, zeppelinContext, debug=False):
+    def __init__(self, zeppelinCommLayer, zeppelinContext):
         self.logger = Logger(self.__class__.__name__).get()
         self.logger.info("New ZeppelinSession")
            
         self.id = 0
         self.zeppelinContext = zeppelinContext
-        self.debug = debug
 
         sessionCommDivId, sessionCommVar, sessionStatusVar = self.sessionVars(all=True)
         self.reset(sessionCommVar)
@@ -77,11 +80,9 @@ class ZeppelinSession:
     def start(self):
         sessionCommDivId, sessionCommVar, sessionStatusVar = self.sessionVars(all=True)
         self.logger.debug("Starting Angular watcher for $scope.%s" % sessionCommVar)
-        if self.debug:
-            print("""%%angular Debug: {{%s}}""" % sessionCommVar)
 
         print("%angular") 
-        print(WSJS_TMPL % (sessionCommVar, str(uuid4()), sessionCommDivId))
+        print(WSJS_TMPL % (sessionCommVar, sessionCommDivId, str(uuid4())))
         self.zeppelinContext.angularBind(sessionStatusVar, "ZeppelinCommLayer initialized (do not delete this paragraph)")
         
     def send(self, task, msg):
