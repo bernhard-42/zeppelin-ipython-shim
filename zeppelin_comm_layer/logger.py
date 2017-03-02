@@ -28,10 +28,34 @@ class LogLevel(with_metaclass(Singleton)):
         self.logLevel = logLevel
         
 
+
+class TruncatingFormatter(logging.Formatter):
+    def __init__(self, fmt=None, datefmt=None, size=400, noNL=True):
+        super(TruncatingFormatter, self).__init__(fmt, datefmt)
+        self.size = size
+        self.noNL = noNL
+
+    def truncate(self, text, size=80, noNL=True):
+        if len(text) < self.size:
+            ret = text
+        else:
+            ret = text[:self.size-6] + " [...(%d)]" % (len(text) - self.size)
+        if self.noNL:
+            return ret.replace("\n", "\\n")
+        else:
+            return ret
+        
+    def format(self, record):
+        record.message = self.truncate(record.getMessage())
+        if self.usesTime():
+            record.asctime = self.formatTime(record, self.datefmt)
+        return self._fmt % record.__dict__
+
+
 class Logger(object):
 
     def __init__(self, name):
-        logLevel = LogLevel().logLevel
+        logLevel = "DEBUG"
         logger = logging.getLogger(name)
         logger.setLevel(logLevel)
         if not logger.handlers:
@@ -39,7 +63,7 @@ class Logger(object):
             prefix = "zeppelin-interpreter-pyspark-comm-layer"
             file_name = os.path.join(log_dir, '%s-%s-%s.log' % (prefix, os.environ["USERNAME"], socket.gethostname()))
             handler = logging.FileHandler(file_name)
-            formatter = logging.Formatter('%(asctime)s %(levelname)s:%(name)s %(message).400s ...')
+            formatter = TruncatingFormatter('%(asctime)s %(levelname)s:%(name)s %(message)s',size=400, noNL=True)
             handler.setFormatter(formatter)
             handler.setLevel(logLevel)
             logger.addHandler(handler)
@@ -48,3 +72,4 @@ class Logger(object):
 
     def get(self):
         return self._logger
+
