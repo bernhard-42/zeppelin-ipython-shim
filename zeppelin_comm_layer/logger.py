@@ -61,7 +61,7 @@ class Logger(object):
         if not logger.handlers:
             log_dir = os.environ["ZEPPELIN_LOG_DIR"]
             prefix = "zeppelin-interpreter-pyspark-comm-layer"
-            file_name = os.path.join(log_dir, '%s-%s-%s.log' % (prefix, os.environ["USERNAME"], socket.gethostname()))
+            file_name = os.path.join(log_dir, '%s-%s-%s.log' % (prefix, os.environ["USER"], socket.gethostname()))
             handler = logging.FileHandler(file_name)
             formatter = TruncatingFormatter('%(asctime)s %(levelname)s:%(name)s %(message)s',size=400, noNL=True)
             handler.setFormatter(formatter)
