@@ -6,7 +6,7 @@ def read(fname):
 
 setup(
     name = "zeppelin_comm_layer",
-    version = "0.2.0",
+    version = "0.9.0",
     author = "Bernhard Walter",
     author_email = "bwalter@gmail.com",
     description = ("A simulation of the Jupyter/IPython display/communication system "
