@@ -1,6 +1,5 @@
 from uuid import uuid4
 import logging
-from six import with_metaclass
 from os.path import dirname 
 
 from IPython.core.interactiveshell import InteractiveShell
@@ -13,11 +12,12 @@ from .comm_manager import ZeppelinCommManager
 from .kernel import Kernel
 from .utils import Singleton
 from .logger import Logger, LogLevel
+from .bokeh_state import BokehStates
 
 
-class ZeppelinCommLayer(with_metaclass(Singleton)):
+class ZeppelinCommLayer:
 
-    def init(self, zeppelinContext, logLevel):
+    def __init__(self, zeppelinContext, logLevel):
 
         LogLevel().setLogLevel(logLevel)
         self.logger = Logger(self.__class__.__name__).get()
@@ -30,7 +30,7 @@ class ZeppelinCommLayer(with_metaclass(Singleton)):
         
         self.logger.debug("Patching InteractiveShell.kernel")
         session = ZeppelinSession(self, self.zeppelinContext)
-        commManager = ZeppelinCommManager().init()
+        commManager = ZeppelinCommManager()
         kernel = Kernel(commManager, session)
         self.ip.kernel = kernel
 
@@ -40,7 +40,6 @@ class ZeppelinCommLayer(with_metaclass(Singleton)):
 
         self.logger.debug("Setting IPython Display Manager")
         self.ip.display_pub = ZeppelinDisplayPublisher(self)
-        return self
         
     def start(self):
         self.logger.info("Starting Comm Layer Watcher")
@@ -69,6 +68,9 @@ class ZeppelinCommLayer(with_metaclass(Singleton)):
     def _printJs(self, script, header=False, delayed=True):
         wrapper = '<script type="text/javascript">' + script + '</script>'
         self._print(wrapper, header, delayed)
+
+    def enableBokeh(self):
+        BokehStates(self.zeppelinContext).initState()
 
 
 def resetZeppelinCommLayer(zeppelinContext):
