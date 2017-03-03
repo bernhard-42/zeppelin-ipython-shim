@@ -18,11 +18,11 @@ from .logger import Logger
 
 class ZeppelinDisplayPublisher(DisplayPublisher):
 
-    def __init__(self, zeppelinCommLayer):
+    def __init__(self, session):
         self.logger = Logger(self.__class__.__name__).get()
         self.logger.info("New ZeppelinDisplayManager")
             
-        self.zeppelinCommLayer = zeppelinCommLayer
+        self.session = session
  
     def publish(self, data, metadata=None, source=None):
         doc = {}
@@ -34,13 +34,13 @@ class ZeppelinDisplayPublisher(DisplayPublisher):
                 html = d.get("text/html")
                 if html is not None: 
                     self.logger.debug("Publish html %s" % html)
-                    self.zeppelinCommLayer._print(html, header)
+                    self.session.print(html, header)
                     header = False
                     
                 js = d.get("application/javascript")
                 if js is not None: 
                     self.logger.debug("Publish javascript %s" % js)
-                    self.zeppelinCommLayer._printJs(js, header)
+                    self.session.printJs(js, header)
                     header = False
             
     def clear_output(self, wait=False):

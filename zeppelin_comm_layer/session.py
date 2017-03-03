@@ -15,6 +15,7 @@
 from uuid import uuid4
 import json
 import time
+from os.path import dirname 
 from .logger import Logger
 
 
@@ -70,33 +71,6 @@ class ZeppelinSession:
         self.id = 0
         self.zeppelinContext = zeppelinContext
 
-        sessionCommDivId, sessionCommVar, sessionStatusVar = self.sessionVars(all=True)
-        self.reset(sessionCommVar)
-
-        # div must exist before javascript below can be printed
-        self.zeppelinContext.angularBind(sessionStatusVar, "")
-        print("""%%angular <div id="%s">{{%s}}</div>\n""" % (sessionCommDivId, sessionStatusVar))
-
-    def start(self):
-        sessionCommDivId, sessionCommVar, sessionStatusVar = self.sessionVars(all=True)
-        self.logger.debug("Starting Angular watcher for $scope.%s" % sessionCommVar)
-
-        print("%angular") 
-        print(WSJS_TMPL % (sessionCommVar, sessionCommDivId, str(uuid4())))
-        self.zeppelinContext.angularBind(sessionStatusVar, "ZeppelinCommLayer initialized (do not delete this paragraph)")
-        
-    def send(self, task, msg):
-        sessionCommVar = self.sessionVars(all=False)
-        self.logger.debug("Sending task %s to $scope.%s for message %s" % (task, sessionCommVar, msg))
-        self.id += 1
-        self.zeppelinContext.angularBind(sessionCommVar, {"task":task, "msg":msg})
-        
-    def reset(self, sessionCommVar):
-        sessionCommVar = self.sessionVars(all=False)
-        self.logger.debug("Reset $scope.%s" % sessionCommVar)
-        self.zeppelinContext.angularUnbind(sessionCommVar)
-        self.id = 0
-
     def sessionVars(self, all=True):
         noteId = self.zeppelinContext.getInterpreterContext().getNoteId()
         sessionCommVar = "____zeppelin_comm_%s_msg__" % noteId
@@ -106,4 +80,45 @@ class ZeppelinSession:
             return (sessionCommDivId, sessionCommVar, sessionStatusVar)
         else:
             return sessionCommVar
+
+    def init(self):
+        sessionCommDivId, sessionCommVar, sessionStatusVar = self.sessionVars(all=True)
+        self.logger.debug("Reset $scope.%s" % sessionCommVar)
+        self.zeppelinContext.angularUnbind(sessionCommVar)
+
+        self.logger.info("Loading Comm Layer Javascript libs")
+        jsScript = open("%s/js/zeppelin_comm_layer-min.js" % dirname(__file__), "r").read() + "\nconsole.log('Comm Layer Javascript libs loaded')"
+
+        # div must exist before javascript below can be printed
+        print("%angular")
+        print("""<script>{{%s}}</script>\n""" % jsScript)
+        print("""<div id="%s">{{%s}}</div>\n""" % (sessionCommDivId, sessionStatusVar))
+
+    def start(self):
+        sessionCommDivId, sessionCommVar, sessionStatusVar = self.sessionVars(all=True)
+        self.logger.debug("Starting Angular watcher for $scope.%s" % sessionCommVar)
+
+        self.zeppelinContext.angularBind(sessionStatusVar, "ZeppelinCommLayer initialized (do not delete this paragraph)")
+        print("%angular") 
+        print(WSJS_TMPL % (sessionCommVar, sessionCommDivId, str(uuid4())))
+        
+    def send(self, task, msg):
+        sessionCommVar = self.sessionVars(all=False)
+        self.logger.debug("Sending task %s to $scope.%s for message %s" % (task, sessionCommVar, msg))
+        self.id += 1
+        self.zeppelinContext.angularBind(sessionCommVar, {"task":task, "msg":msg})
+        
+    def print(self, html, header=False):
+        if header:
+            print("%angular")
+        div_id = str(uuid4())
+        wrapper = '<div id="%s"></div>' % div_id
+        print(wrapper)
+        self.logger.debug("Delayed printing of " + wrapper)
+        self.send("publish", {"div_id":div_id, "html":html})
+    
+    def printJs(self, script, header=False):
+        wrapper = '<script>' + script + '</script>'
+        self.print(wrapper, header)
+
 
