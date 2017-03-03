@@ -53,7 +53,8 @@ In Zeppelin Notebook
 ```python
 from zeppelin_comm_layer import ZeppelinCommLayer
 
-# Note: Zeppelin Comm Layer is logging to %ZEPPELIN_LOG_DIR/zeppelin-interpreter-pyspark-comm-layer-$USERNAME-$HOSTNAME.log
+# Note: Zeppelin Comm Layer is logging to 
+#       %ZEPPELIN_LOG_DIR/zeppelin-interpreter-pyspark-comm-layer-$USERNAME-$HOSTNAME.log
 import logging
 zcl = ZeppelinCommLayer(z.z, logLevel=logging.DEBUG)
 ```
@@ -71,14 +72,14 @@ zcl.start()
 
 Bokeh global state management depends on a global variable which is sufficient if there is a 1-to-1 relationship between a notebook and a kernel as with IPython.
 
-Zeppelin will have multiple notebooks for each interpreter, hence Bokeh state management needs to enhanced to support a state per Zeppelin Notebook (else `puch_notebook`will fail when more than one tab with notebooks and Bokeh plots are open):
+Zeppelin will have multiple notebooks for each interpreter, hence Bokeh state management needs to enhanced to support a state per Zeppelin Notebook (else `push_notebook`will fail when more than one tab with notebooks and Bokeh plots are open):
 
 ```bash
 zcl.enableBokeh()
 ```
 
 Note: The Zeppelin Comm Layer sessions also depend on Zeppelins `noteId`
- 
+
 Supported features
 
 - Display graphics inline
