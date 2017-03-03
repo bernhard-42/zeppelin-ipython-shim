@@ -100,15 +100,10 @@ output_notebook()
 
 ```
 2017-03-03 18:14:35,145 DEBUG:ZeppelinDisplayPublisher Publish html \n    <div class="bk-root">\n        <a href="http://bokeh.pydata.org" target="_blank" class="bk-logo bk-logo-small bk-logo-notebook"></a>\n        <span id="5d890ee3-7421-4247-9bac-0070db397bdf">Loading BokehJS ...</span>\n    </div>
-
 2017-03-03 18:14:35,147 DEBUG:ZeppelinSession Delayed printing of <div id="0d2fc49b-8f76-4b36-90d5-d27a4d0530ce"></div>
-
 2017-03-03 18:14:35,148 DEBUG:ZeppelinSession Sending task publish to $scope.____zeppelin_comm_2C9HR8ADP_msg__ for message {'html': '\n    <div class="bk-root">\n        <a href="http://bokeh.pydata.org" target="_blank" class="bk-logo bk-logo-small bk-logo-notebook"></a>\n        <span id="5d890ee3-7421-4247-9bac-0070db397bdf">Loading BokehJS ...</span>\n    </div>', 'div_id': '0d2fc49b-8f76-4b36-90d5-d27a4d0530ce'}
-
 2017-03-03 18:14:35,150 DEBUG:ZeppelinDisplayPublisher Publish javascript \n(function(global) {\n  function now() {\n    return new Date();\n  }\n\n  var force = "1";\n\n  if (typeof (window._bokeh_onload_callbacks) === "undefined" || force !== "") {\n    window._bokeh_onload_callbacks = [];\n    window._bokeh_is_loading = undefined;\n  }\n\n\n  \n  if (typeof (window._bokeh_timeout) === "undefined" || force !== "") {\n    window._bokeh_timeout = Date.now() + 5 [...(4363)]
-
 2017-03-03 18:14:35,152 DEBUG:ZeppelinSession Delayed printing of <div id="02afa5e9-1270-4172-bfac-7e80515a35c3"></div>
-
 2017-03-03 18:14:35,153 DEBUG:ZeppelinSession Sending task publish to $scope.____zeppelin_comm_2C9HR8ADP_msg__ for message {'html': '<script>\n(function(global) {\n  function now() {\n    return new Date();\n  }\n\n  var force = "1";\n\n  if (typeof (window._bokeh_onload_callbacks) === "undefined" || force !== "") {\n    window._bokeh_onload_callbacks = [];\n    window._bokeh_is_loading = undefined;\n  }\n\n\n  \n  if (typeof (window._b [...(4664)]
 ```
 
@@ -153,7 +148,6 @@ handle1 = show(row(p1, p2), notebook_handle=True)
 2017-03-03 18:23:34,498 DEBUG:ZeppelinDisplayPublisher Publish html \n\n    <div class="bk-root">\n        <div class="plotdiv" id="738bad8c-37a7-4c12-a5f7-03847097ad65"></div>\n    </div>\n<script type="text/javascript">\n  \n  (function(global) {\n    function now() {\n      return new Date();\n    }\n  \n    var force = "";\n  \n    if (typeof (window._bokeh_onload_callbacks) === "undefined" || force !== "") {\n      window._bokeh_onload_callbacks = [];\n    [...(16954)]
 2017-03-03 18:23:34,500 DEBUG:ZeppelinSession Delayed printing of <div id="1e0c6c1c-d716-4aae-b5da-6da2eff5e7a3"></div>
 2017-03-03 18:23:34,501 DEBUG:ZeppelinSession Sending task publish to $scope.____zeppelin_comm_2C9HR8ADP_msg__ for message {'html': '\n\n    <div class="bk-root">\n        <div class="plotdiv" id="738bad8c-37a7-4c12-a5f7-03847097ad65"></div>\n    </div>\n<script type="text/javascript">\n  \n  (function(global) {\n    function now() {\n      return new Date();\n    }\n  \n    var force = "";\n  \n    if (typeof (window._bokeh_onload_call [...(17244)]
-
 2017-03-03 18:23:34,504 INFO:ZeppelinComm New ZeppelinComm for target 84ce1a2a-f1f8-4956-8eae-9a468deccba6
 2017-03-03 18:23:34,504 DEBUG:ZeppelinComm Register Comm 1c90308f-fc70-426d-b7e2-39c0475ce95e with CommManager ...
 2017-03-03 18:23:34,505 DEBUG:ZeppelinCommManager Registering comm 1c90308f-fc70-426d-b7e2-39c0475ce95e
