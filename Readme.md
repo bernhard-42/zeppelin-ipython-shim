@@ -51,14 +51,11 @@ and minify the javascript files
 In Zeppelin Notebook
 
 ```python
-from zeppelin_comm_layer import ZeppelinCommLayer, resetZeppelinCommLayer
-
-# To reset both the python ZeppelinCommLayer singleton and the Javascript Jupyter object, uncomment the next line
-# resetZeppelinCommLayer(z.z)  
+from zeppelin_comm_layer import ZeppelinCommLayer
 
 # Note: Zeppelin Comm Layer is logging to %ZEPPELIN_LOG_DIR/zeppelin-interpreter-pyspark-comm-layer-$USERNAME-$HOSTNAME.log
 import logging
-zcl = ZeppelinCommLayer(z.z, debug=False, logLevel=logging.DEBUG)
+zcl = ZeppelinCommLayer(z.z, logLevel=logging.DEBUG)
 ```
 
 In the next Paragraph start the shim (note: this cannot be done in the paragraph above)
@@ -72,6 +69,16 @@ zcl.start()
 
 ### 4.1 Bokeh (http://bokeh.pydata.org)
 
+Bokeh global state management depends on a global variable which is sufficient if there is a 1-to-1 relationship between a notebook and a kernel as with IPython.
+
+Zeppelin will have multiple notebooks for each interpreter, hence Bokeh state management needs to enhanced to support a state per Zeppelin Notebook (else `puch_notebook`will fail when more than one tab with notebooks and Bokeh plots are open):
+
+```bash
+zcl.enableBokeh()
+```
+
+Note: The Zeppelin Comm Layer sessions also depend on Zeppelins `noteId`
+ 
 Supported features
 
 - Display graphics inline
@@ -131,12 +138,20 @@ This involves
 ```
 Interpreter (Python)                                        Notebook (Javascript)
 --------------------                                        ---------------------
-ZeppelinCommLayer                                           Jupyter
-ZeppelinSession                                             Notebook
-Kernel                                                      Kernel
-CommManager                                                 CommManager
-Comm                    <==>    Zeppelin Angular   <==>     Comm
-                                  Backend API
+
+   ZeppelinCommLayer (S)                                          Jupyter
+          v                                                          v
+IPython InteractiveShell (S)                                     Notebook
+          v                                                          v 
+        Kernel                                                     Kernel
+          v                                                          v
+    ZeppelinSession         <==>    Zeppelin Angular   <==>    ZeppelinSession
+    CommManager (S)                   Backend API                CommManager  
+          ^                                                          ^
+     ZeppelinComm                                                  Comm
+
+
+(S) = Singleton
 ```
 
 
