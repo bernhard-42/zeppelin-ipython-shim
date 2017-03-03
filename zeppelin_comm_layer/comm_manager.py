@@ -20,13 +20,12 @@ from six import with_metaclass
 
 class ZeppelinCommManager(with_metaclass(Singleton)):
 
-    def init(self):
+    def __init__(self):
         self.logger = Logger(self.__class__.__name__).get()
         self.logger.info("New ZeppelinCommManager")
 
         self.targets = {}
         self.comms = {}
-        return self
         
     def register_target(self, target_name, f):
         self.logger.debug("Registering target %s" % target_name)
