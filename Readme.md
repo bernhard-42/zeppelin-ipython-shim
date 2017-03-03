@@ -155,6 +155,13 @@ IPython InteractiveShell (S)                                     Notebook
 (S) = Singleton
 ```
 
+### 6.3 Startup Phase
+
+[Startup.md](Startup.md) shows per Notebook Paragraph (as in [examples/ZeppelinCommLayer Overview](examples/ZeppelinCommLayer Overview.json)):
+
+- Zeppelin notebook inputs 
+- Zeppelin Comm Layer log file per
+- Browser Web Console output
 
 
 ## 7 Credits
