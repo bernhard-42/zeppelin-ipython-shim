@@ -128,7 +128,7 @@ Bokeh: all callbacks have finished                                              
 
 ## 5  Render a first plot
 
-### 4.1 Zeppelin Notebook (NoteId=2C9HR8ADP)
+### 5.1 Zeppelin Notebook (NoteId=2C9HR8ADP)
 
 ```python
 %pyspark
@@ -142,7 +142,7 @@ r2 = p2.circle([1,2,3], [4,5,6], size=20)
 handle1 = show(row(p1, p2), notebook_handle=True)
 ```
 
-### 4.2 Zeppelin Comm Layer Log File
+### 5.2 Zeppelin Comm Layer Log File
 
 ```
 2017-03-03 18:23:34,498 DEBUG:ZeppelinDisplayPublisher Publish html \n\n    <div class="bk-root">\n        <div class="plotdiv" id="738bad8c-37a7-4c12-a5f7-03847097ad65"></div>\n    </div>\n<script type="text/javascript">\n  \n  (function(global) {\n    function now() {\n      return new Date();\n    }\n  \n    var force = "";\n  \n    if (typeof (window._bokeh_onload_callbacks) === "undefined" || force !== "") {\n      window._bokeh_onload_callbacks = [];\n    [...(16954)]
@@ -155,7 +155,7 @@ handle1 = show(row(p1, p2), notebook_handle=True)
 2017-03-03 18:23:34,505 DEBUG:ZeppelinSession Sending task comm_open to $scope.____zeppelin_comm_2C9HR8ADP_msg__ for message {'comm_id': '1c90308f-fc70-426d-b7e2-39c0475ce95e', 'target_name': '84ce1a2a-f1f8-4956-8eae-9a468deccba6', 'data': {}, 'metadata': None}
 ```
 
-### 4.3 Browser Web Console
+### 5.3 Browser Web Console
 
 ```
 ZeppelinSession: publish 1e0c6c1c-d716-4aae-b5da-6da2eff5e7a3                                                     localhost:8080:1:4150
