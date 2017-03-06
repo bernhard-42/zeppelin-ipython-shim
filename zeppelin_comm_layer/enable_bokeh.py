@@ -25,6 +25,7 @@ class BokehStates(with_metaclass(Singleton)):
 
     def __init__(self, zeppelinContext):
         self.logger = Logger(self.__class__.__name__).get()
+        self.logger.propagate = False        
         self.logger.info("New BokehStates")
         self.zeppelinContext = zeppelinContext
         self._bokehStates = {}
@@ -39,6 +40,7 @@ class BokehStates(with_metaclass(Singleton)):
     def initState(self):
         self.logger.info("Adding Bokeh state for notebook %s" % self.getNoteId())
         self._bokehStates[self.getNoteId()] = State()
+        print("Bokeh is ready to be used")
 
 
     def getNoteId(self):

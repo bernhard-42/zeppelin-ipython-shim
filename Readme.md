@@ -13,7 +13,10 @@ However, it is not compatible with option 2 and 3.
 
 This project creates a shim in [Apache Zeppelin](http://zeppelin.apache.org/) that simulates option 2, but does not cover option 3.
 
-As an example it uses Bokeh 0.12.4+ to visualise (`output_notebook`) or modify (`push_notebook`) plots inline in [Apache Zeppelin](http://zeppelin.apache.org/).
+As an example it uses 
+
+ - Bokeh 0.12.4+ to visualise (`output_notebook`) or modify (`push_notebook`) plots inline in [Apache Zeppelin](http://zeppelin.apache.org/).
+ - Vega-Lite  1.3.1
 
 Tested with Python 2.7 (Ubuntu 16.10) and Python 3.5 (as of Anaconda3 4.2).
 
@@ -96,16 +99,26 @@ Supported features
 
 - Bokeh Javascript Widgets interacting with the plot
 
-As an example import [examples/ZeppelinCommLayer Overview](examples/ZeppelinCommLayer Overview.json) into Zeppelin
+As an example view [ZeppelinCommLayer Overview.md](examples/Viewables/ZeppelinCommLayer Overview.md) or import [examples/ZeppelinCommLayer Overview.json](examples/ZeppelinCommLayer Overview.json) into Zeppelin
 
-For some of the Bokeh Gallery plots see [examples/ZeppelinCommLayer Bokeh Gallery](examples/ZeppelinCommLayer Bokeh Gallery.json)
+For some of the Bokeh Gallery plots see [ZeppelinCommLayer Bokeh Gallery.md](examples/Viewables/ZeppelinCommLayer Bokeh Gallery.md) or import [examples/ZeppelinCommLayer Bokeh Gallery.json](examples/ZeppelinCommLayer Bokeh Gallery.json)
+
+
+### 4.2 Vega-Lite (https://vega.github.io/vega-lite/)
+
+Vega-Lite is a declarative graphics library. The integration allows to
+
+- Write Vega Lite Specs as python dicts
+- Overwrite plots (there is currently no interaction in Vega-Lite. However by being able to overwrite a plot, dynmic updates can be simulated)
+
+For how to use it, see [VegaLite - Overview.md](examples/Viewables/VegaLite - Overview.md) or import [examples/VegaLite - Overview.json](examples/VegaLite - Overview.json) into Zeppelin
 
 
 
 ## 5 Limitations:
 
 - The shim only implements a one way communication from interpreter to notebook.
-- currently tested with Bokeh 0.12.4 : all examples work with the following exceptions:
+- currently tested with Bokeh 0.12.4: all examples work with the following exceptions:
   - layout sizing_mode 'stretch_both' not working
   - mpl.toBokeh() not working
   - Bokeh server not covered
@@ -162,6 +175,7 @@ IPython InteractiveShell (S)                                     Notebook
 - Zeppelin notebook inputs 
 - Zeppelin Comm Layer log file per
 - Browser Web Console output
+
 
 
 ## 7 Credits

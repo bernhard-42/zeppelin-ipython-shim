@@ -14,6 +14,8 @@
 
 
 import logging
+import time
+from os.path import dirname 
 
 from IPython.core.interactiveshell import InteractiveShell
 import ipykernel.comm
@@ -25,16 +27,19 @@ from .comm_manager import ZeppelinCommManager
 from .kernel import Kernel
 from .utils import Singleton
 from .logger import Logger, LogLevel
-from .bokeh_state import BokehStates
+from .enable_bokeh import BokehStates
+from .enable_vegalite import VegaLite
 
 
 class ZeppelinCommLayer:
+    __version__ = "0.9.1"
 
     def __init__(self, zeppelinContext, logLevel):
 
         LogLevel().setLogLevel(logLevel)
         self.logger = Logger(self.__class__.__name__).get()
-        self.logger.info("Initializing ZeppelinCommLayer singleton")
+        self.logger.propagate = False        
+        self.logger.info("Initializing ZeppelinCommLayer")
 
         self.zeppelinContext = zeppelinContext
         
@@ -42,14 +47,17 @@ class ZeppelinCommLayer:
         ipykernel.comm.Comm = ZeppelinComm
         ipykernel.comm.CommManager = ZeppelinCommManager
         
+        self.logger.info("Loading Comm Layer Javascript libs")
+        jsScript = open("%s/js/zeppelin_comm_layer-min.js" % dirname(__file__), "r").read() + "\nconsole.log('Comm Layer Javascript libs loaded')"
+
         self.ip = InteractiveShell.instance()
-        session = ZeppelinSession(self, self.zeppelinContext)
+        self.session = ZeppelinSession(self.zeppelinContext, jsScript)
         commManager = ZeppelinCommManager()
         self.logger.debug("Patching InteractiveShell.kernel")
-        self.ip.kernel = Kernel(commManager, session)
+        self.ip.kernel = Kernel(commManager, self.session)
 
         self.logger.debug("Setting IPython Display Manager")
-        self.ip.display_pub = ZeppelinDisplayPublisher(session)
+        self.ip.display_pub = ZeppelinDisplayPublisher(self.session)
         
         self.ip.kernel.session.init()
 
@@ -60,9 +68,10 @@ class ZeppelinCommLayer:
     def enableBokeh(self):
         BokehStates(self.zeppelinContext).initState()
 
+    def enableVegaLite(self):
+        vg = VegaLite(self.session)
+        return vg
 
-def resetZeppelinCommLayer(zeppelinContext):
-    noteId = zeppelinContext.getInterpreterContext().getNoteId()
-    sessionCommVar = "____zeppelin_comm_%s_msg__" % noteId
-    zeppelinContext.angularBind(sessionCommVar, {"task":"reset", "msg":{}})
-    zeppelinContext.angularUnbind(sessionCommVar)
+    def reset(self):
+        self.session.reset()
+

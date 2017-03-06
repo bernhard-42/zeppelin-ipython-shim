@@ -26,7 +26,7 @@ var ZeppelinSession = function(kernel) {
 ZeppelinSession.prototype.handleMsg = function(data) {
     if(data.task == "publish") {
         this.publish(data.msg.div_id, data.msg.html); 
-    } else if(data.task == "reset") {
+    } else if(data.task == "comm_reset") {
         console.log("cleaning watchers")
         var unwatchers = window.__zeppelin_notebook_unwatchers__;
         for(i in unwatchers) {

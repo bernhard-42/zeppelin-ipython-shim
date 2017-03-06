@@ -22,6 +22,7 @@ class ZeppelinComm:
     
     def __init__(self, target_name, data=None, metadata=None):
         self.logger = Logger(self.__class__.__name__).get()
+        self.logger.propagate = False
         self.logger.info("New ZeppelinComm for target %s" % target_name)
 
         self.target_name = target_name

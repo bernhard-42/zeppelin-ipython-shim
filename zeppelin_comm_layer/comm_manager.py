@@ -22,6 +22,7 @@ class ZeppelinCommManager(with_metaclass(Singleton)):
 
     def __init__(self):
         self.logger = Logger(self.__class__.__name__).get()
+        self.logger.propagate = False
         self.logger.info("New ZeppelinCommManager")
 
         self.targets = {}

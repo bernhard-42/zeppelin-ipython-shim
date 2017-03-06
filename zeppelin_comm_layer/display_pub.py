@@ -20,6 +20,7 @@ class ZeppelinDisplayPublisher(DisplayPublisher):
 
     def __init__(self, session):
         self.logger = Logger(self.__class__.__name__).get()
+        self.logger.propagate = False
         self.logger.info("New ZeppelinDisplayManager")
             
         self.session = session
