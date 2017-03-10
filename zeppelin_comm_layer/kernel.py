@@ -16,4 +16,7 @@ class Kernel:
     def __init__(self, commManager, session):
         self.comm_manager = commManager
         self.session = session
+
+    def send(self, task, msg):
+    	self.session.call("__jupyterHandler", {"task":task, "msg":msg})
         

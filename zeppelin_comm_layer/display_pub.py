@@ -12,19 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from uuid import uuid4
 from IPython.core.displaypub import DisplayPublisher
 from .logger import Logger
 
 
 class ZeppelinDisplayPublisher(DisplayPublisher):
 
-    def __init__(self, session):
+    def __init__(self, kernel):
         self.logger = Logger(self.__class__.__name__).get()
         self.logger.propagate = False
         self.logger.info("New ZeppelinDisplayManager")
             
-        self.session = session
+        self.kernel = kernel
  
+
     def publish(self, data, metadata=None, source=None):
         doc = {}
         header = True
@@ -35,15 +37,27 @@ class ZeppelinDisplayPublisher(DisplayPublisher):
                 html = d.get("text/html")
                 if html is not None: 
                     self.logger.debug("Publish html %s" % html)
-                    self.session.print(html, header)
+                    self.print(html, header)
                     header = False
                     
                 js = d.get("application/javascript")
                 if js is not None: 
                     self.logger.debug("Publish javascript %s" % js)
-                    self.session.printJs(js, header)
+                    self.print('<script>' + js + '</script>', header)
                     header = False
             
+
+    def print(self, html, header=False):
+        div_id = str(uuid4())
+        wrapper = '<div id="%s"></div>' % div_id
+        self.logger.debug("Delayed printing of " + wrapper)
+        if header:
+            print("%angular")
+        print(wrapper)
+        self.kernel.send("publish", {"div_id":div_id, "html":html})
+    
+    
     def clear_output(self, wait=False):
         self.logger.debug("Clear output not implemented yet")
         pass
+    

@@ -23,10 +23,10 @@ var ZeppelinSession = function(kernel) {
     this.kernel = kernel;
 }   
 
-ZeppelinSession.prototype.handleMsg = function(data) {
-    if(data.task == "publish") {
-        this.publish(data.msg.div_id, data.msg.html); 
-    } else if(data.task == "comm_reset") {
+ZeppelinSession.prototype.handleMsg = function(object) {
+    if(object.task == "publish") {
+        this.publish(object.msg.div_id, object.msg.html); 
+    } else if(object.task == "comm_reset") {
         console.log("cleaning watchers")
         var unwatchers = window.__zeppelin_notebook_unwatchers__;
         for(i in unwatchers) {
@@ -36,21 +36,21 @@ ZeppelinSession.prototype.handleMsg = function(data) {
         window.__zeppelin_already_executed__ = [];
         console.log("Deleting Jupyter")
         Jupyter = null;
-    } else if(data.task == "comm_open") {
-        var msg = data.msg;
+    } else if(object.task == "comm_open") {
+        var msg = object.msg;
         console.info("Open comm for target_name" + msg.target_name + "and comm id " + msg.comm_id);
-        this.kernel.comm_manager.new_comm(msg.target_name, msg.data, {}, msg.metadata, msg.comm_id)
-    } else if(data.task == "comm_close") {
+        this.kernel.comm_manager.new_comm(msg.target_name, msg.object, {}, msg.metadata, msg.comm_id)
+    } else if(object.task == "comm_close") {
         console.log("comm_close:");
-        console.log(data);
-    } else if(data.task == "comm_msg") {
-        var msg = data.msg;
+        console.log(object);
+    } else if(object.task == "comm_msg") {
+        var msg = object.msg;
         console.info("Message for comm id " + msg.comm_id);
         this.kernel.comm_manager.comms[msg.comm_id].then(function(comm) {
             comm.handle_msg({"content": msg}); 
         });
     } else {
-        console.error("UNHANDLED:" + JSON.stringify(data));
+        console.error("UNHANDLED:" + JSON.stringify(object));
     }
 }
 

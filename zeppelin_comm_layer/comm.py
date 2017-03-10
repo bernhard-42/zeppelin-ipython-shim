@@ -38,7 +38,7 @@ class ZeppelinComm:
 
     def _send(self, task, data, metadata):
         msg = {"comm_id":self.comm_id, "target_name":self.target_name, "data":data, "metadata":metadata}
-        self.kernel.session.send(task, msg)
+        self.kernel.send(task, msg)
 
     def open(self, data=None, metadata=None):
         self.logger.debug("Register Comm %s with CommManager ..." % self.comm_id)

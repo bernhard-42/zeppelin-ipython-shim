@@ -54,8 +54,8 @@ class TruncatingFormatter(logging.Formatter):
 
 class Logger(object):
 
-    def __init__(self, name):
-        logLevel = "DEBUG"
+    def __init__(self, name, size=400):
+        logLevel = "INFO"
         logger = logging.getLogger(name)
         logger.setLevel(logLevel)
         if not logger.handlers:
@@ -63,7 +63,7 @@ class Logger(object):
             prefix = "zeppelin-interpreter-pyspark-comm-layer"
             file_name = os.path.join(log_dir, '%s-%s-%s.log' % (prefix, os.environ["USER"], socket.gethostname()))
             handler = logging.FileHandler(file_name)
-            formatter = TruncatingFormatter('%(asctime)s %(levelname)s:%(name)s %(message)s',size=400, noNL=True)
+            formatter = TruncatingFormatter('%(asctime)s %(levelname)s:%(name)s %(message)s', size=size, noNL=True)
             handler.setFormatter(formatter)
             handler.setLevel(logLevel)
             logger.addHandler(handler)

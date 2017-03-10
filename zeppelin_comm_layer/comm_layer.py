@@ -20,27 +20,38 @@ from os.path import dirname
 from IPython.core.interactiveshell import InteractiveShell
 import ipykernel.comm
 
-from .session import ZeppelinSession
+from zeppelin_session import ZeppelinSession
+
 from .display_pub import ZeppelinDisplayPublisher
 from .comm import ZeppelinComm
 from .comm_manager import ZeppelinCommManager
 from .kernel import Kernel
 from .utils import Singleton
 from .logger import Logger, LogLevel
-from .enable_bokeh import BokehStates
-from .enable_vegalite import VegaLite
+
+# from .enable_bokeh import BokehStates
+# from .enable_vegalite import VegaLite
+
+
+
+_JUPYTER_HANDLER = """
+__jupyterHandler = function(session, object) {
+    Jupyter.notebook.kernel.session.handleMsg(object);
+}
+"""
 
 
 class ZeppelinCommLayer:
-    __version__ = "0.9.1"
+    __version__ = "0.9.3"
 
-    def __init__(self, zeppelinContext, logLevel):
+    def __init__(self, zeppelinContext, logLevel, _tag="%angular", _logLen=400):
 
         LogLevel().setLogLevel(logLevel)
-        self.logger = Logger(self.__class__.__name__).get()
+        self.logger = Logger(self.__class__.__name__, size=_logLen).get()
         self.logger.propagate = False        
         self.logger.info("Initializing ZeppelinCommLayer")
 
+        self._tag = _tag
         self.zeppelinContext = zeppelinContext
         
         self.logger.debug("Patching ipykernel Comm and CommManager")
@@ -48,30 +59,34 @@ class ZeppelinCommLayer:
         ipykernel.comm.CommManager = ZeppelinCommManager
         
         self.logger.info("Loading Comm Layer Javascript libs")
-        jsScript = open("%s/js/zeppelin_comm_layer-min.js" % dirname(__file__), "r").read() + "\nconsole.log('Comm Layer Javascript libs loaded')"
+        jsScript = open("%s/js/zeppelin_comm_layer-min.js" % dirname(__file__), "r").read()
 
         self.ip = InteractiveShell.instance()
-        self.session = ZeppelinSession(self.zeppelinContext, jsScript)
+        self.session = ZeppelinSession(self.zeppelinContext, logLevel=logLevel, jsScript=jsScript)
         commManager = ZeppelinCommManager()
         self.logger.debug("Patching InteractiveShell.kernel")
-        self.ip.kernel = Kernel(commManager, self.session)
+        kernel = Kernel(commManager, self.session)
+        self.ip.kernel = kernel
 
         self.logger.debug("Setting IPython Display Manager")
-        self.ip.display_pub = ZeppelinDisplayPublisher(self.session)
+        self.ip.display_pub = ZeppelinDisplayPublisher(kernel)
         
-        self.ip.kernel.session.init()
+        self.session.init(self._tag)
 
-    def start(self):
+
+    def start(self, _tag="%angular"):
         self.logger.info("Starting Comm Layer Watcher")
-        self.ip.kernel.session.start()
+        self.session.start(_tag)
+        self.session.registerFunction("__jupyterHandler", _JUPYTER_HANDLER)  
+
                
-    def enableBokeh(self):
-        BokehStates(self.zeppelinContext).initState()
-
-    def enableVegaLite(self):
-        vg = VegaLite(self.session)
-        return vg
-
     def reset(self):
-        self.session.reset()
+        self.session._reset()
+
+    # def enableBokeh(self):
+    #     BokehStates(self.zeppelinContext).initState()
+
+    # def enableVegaLite(self):
+    #     vg = VegaLite(self.session)
+    #     return vg
 
