@@ -12,4 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .comm_layer import ZeppelinCommLayer
+from .comm_layer import ZeppelinCommLayer, resetZeppelinCommLayer
+from .logger import Logger, LogLevel

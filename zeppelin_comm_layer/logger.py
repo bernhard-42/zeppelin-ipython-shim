@@ -24,9 +24,14 @@ from six import with_metaclass
 
 class LogLevel(with_metaclass(Singleton)):
 
+    def __init__(self):
+        self.logLevel = "INFO"
+
     def setLogLevel(self, logLevel):
         self.logLevel = logLevel
         
+    def getLogLevel(self):
+        return self.logLevel
 
 
 class TruncatingFormatter(logging.Formatter):
@@ -54,8 +59,8 @@ class TruncatingFormatter(logging.Formatter):
 
 class Logger(object):
 
-    def __init__(self, name, size=400):
-        logLevel = "INFO"
+    def __init__(self, name, size=400, noNL=True):
+        logLevel = LogLevel().getLogLevel()
         logger = logging.getLogger(name)
         logger.setLevel(logLevel)
         if not logger.handlers:
@@ -63,7 +68,7 @@ class Logger(object):
             prefix = "zeppelin-interpreter-pyspark-comm-layer"
             file_name = os.path.join(log_dir, '%s-%s-%s.log' % (prefix, os.environ["USER"], socket.gethostname()))
             handler = logging.FileHandler(file_name)
-            formatter = TruncatingFormatter('%(asctime)s %(levelname)s:%(name)s %(message)s', size=size, noNL=True)
+            formatter = TruncatingFormatter('%(asctime)s %(levelname)s:%(name)s %(message)s', size=size, noNL=noNL)
             handler.setFormatter(formatter)
             handler.setLevel(logLevel)
             logger.addHandler(handler)
