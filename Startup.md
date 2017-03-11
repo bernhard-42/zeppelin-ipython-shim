@@ -5,28 +5,43 @@
 ```python
 %pyspark
 
-from zeppelin_comm_layer import ZeppelinCommLayer
+from zeppelin_session import ZeppelinSession, resetZeppelinSession, LogLevel
 
-zcl = ZeppelinCommLayer(z.z, logLevel="DEBUG")
+# resetZeppelinSession(z.z)
+LogLevel().setLogLevel("DEBUG")
+
+session = ZeppelinSession(z.z)
+session.init()
 ```
 
 ### 1.2 Zeppelin Comm Layer Log File
 
 ```
-2017-03-03 18:07:09,038 INFO:ZeppelinCommLayer Initializing ZeppelinCommLayer singleton
-2017-03-03 18:07:09,038 DEBUG:ZeppelinCommLayer Patching ipykernel Comm and CommManager
-2017-03-03 18:07:09,038 INFO:ZeppelinSession New ZeppelinSession
-2017-03-03 18:07:09,038 DEBUG:ZeppelinCommLayer Patching InteractiveShell.kernel
-2017-03-03 18:07:09,038 DEBUG:ZeppelinCommLayer Setting IPython Display Manager
-2017-03-03 18:07:09,038 INFO:ZeppelinDisplayPublisher New ZeppelinDisplayManager
-2017-03-03 18:07:09,039 DEBUG:ZeppelinSession Reset $scope.____zeppelin_comm_NoteId=2C9HR8ADP_msg__
-2017-03-03 18:07:09,040 INFO:ZeppelinSession Loading Comm Layer Javascript libs```
+2017-03-11 19:18:14,512 DEBUG:ZeppelinCommLayerFactory Requesting Comm Layer for Notebook 2C9HR8ADP (None)
+2017-03-11 19:18:14,512 INFO:ZeppelinCommLayer Initializing ZeppelinCommLayer
+2017-03-11 19:18:14,513 INFO:ZeppelinCommLayer Loading Comm Layer Javascript libs
+2017-03-11 19:18:14,513 DEBUG:ZeppelinCommLayer var Comm=function(target_name,comm_id){console.info("Comm: Init");this.target_name=target_name;this.comm_id=comm_id||utils.uuid();this._msg_callback=this._close_callback=null};Comm.prototype.open=function(data,callbacks,metadata){console.error("Comm.open is not implemented yet");return None};Comm.prototype.send=function(data,callbacks,metadata,buffers){console.error("Comm.send is not impleme [...(4667)]
+2017-03-11 19:18:14,518 INFO:Kernel Create ZeppelinSession
+2017-03-11 19:18:14,520 INFO:ZeppelinSession New ZeppelinSession 072f8c9f-4b12-4a1d-a9f6-b8a5a9eb3dd5
+2017-03-11 19:18:14,520 INFO:Kernel Create CommManager
+2017-03-11 19:18:14,520 INFO:ZeppelinCommManager New ZeppelinCommManager
+2017-03-11 19:18:14,520 INFO:ZeppelinCommLayer Patching InteractiveShell.kernel
+2017-03-11 19:18:14,596 INFO:ZeppelinCommLayer Patching ipykernel Comm and CommManager
+2017-03-11 19:18:14,597 DEBUG:ZeppelinCommLayer Setting IPython Display Manager
+2017-03-11 19:18:14,597 INFO:ZeppelinDisplayPublisher New ZeppelinDisplayManager
+2017-03-11 19:18:14,597 DEBUG:ZeppelinCommLayerFactory Notebook: 2C9HR8ADP ZeppelinCommLayer: 4431b561-e8b6-43cc-bbad-fbcd00627715 (Session ID: 072f8c9f-4b12-4a1d-a9f6-b8a5a9eb3dd5)
+2017-03-11 19:18:14,597 INFO:ZeppelinSession Initializing ZeppelinSession 072f8c9f-4b12-4a1d-a9f6-b8a5a9eb3dd5
 ```
 
 ### 1.3 Browser Web Console
 
 ```
-Comm Layer Javascript libs loaded                                                   localhost:8080:3:1
+Comm Layer Javascript libs loaded
+Initiate Javascript part of Zeppelin Comm Layer
+Notebook: init
+Kernel: init
+ZeppelinSession: init
+CommManager: Init
 ```
 
 
@@ -43,48 +58,22 @@ zcl.start()
 ### 2.2 Zeppelin Comm Layer Log File
 
 ```
-2017-03-03 18:09:08,630 INFO:ZeppelinCommLayer Starting Comm Layer Watcher
-2017-03-03 18:09:08,631 DEBUG:ZeppelinSession Starting Angular watcher for $scope.____zeppelin_comm_2C9HR8ADP_msg__
+2017-03-11 19:19:25,797 INFO:ZeppelinCommLayer Starting Comm Layer Watcher
+2017-03-11 19:19:26,317 INFO:ZeppelinSession Register function __jupyterHandler with: \n__jupyterHandler = function(session, object) {\n    Jupyter.notebook.kernel.session.handleMsg(object);\n}\n
 ```
 
 ### 2.3 Browser Web Console
 
 ```
-Get scope for div id__Zeppelin_Session_2C9HR8ADP_Comm__                             localhost:8080:10:9
-NoteboooComm: Cancel watchers                                                       localhost:8080:14:13
-Initiate Javascript Notebook Comms for divId __Zeppelin_Session_2C9HR8ADP_Comm__    localhost:8080:22:9
-Notebook: init                                                                      localhost:8080:1:4793
-Kernel: init                                                                        localhost:8080:1:4507
-ZeppelinSession: init                                                               localhost:8080:1:2953
-CommManager: Init                                                                   localhost:8080:1:1371
-Install Angular watcher for session comm var ____zeppelin_comm_2C9HR8ADP_msg__      localhost:8080:26:9
-Angular script already executed, skipped                                            localhost:8080:38:9
+Get scope for div id__Zeppelin_Session_2C9HR8ADP_Comm__
+Install Angular watcher for session comm var __zeppelin_comm_2C9HR8ADP_msg__
+Registering function __jupyterHandler
 ```
 
 
-## 3 Adapt Bokeh global state management to Zeppelin
+## 3 Load Bokeh libraries and redirect output to Zeppelin Notebook
 
 ### 3.1 Zeppelin Notebook (NoteId=2C9HR8ADP)
-
-```python
-%pyspark
-
-zcl.enableBokeh()
-```
-
-### 3.2 Zeppelin Comm Layer Log File
-```
-2017-03-03 18:13:36,866 INFO:BokehStates Adding Bokeh state for notebook 2C9HR8ADP
-```
-
-### 3.3 Browser Web Console
-
-n/a
-
-
-## 4 Load Bokeh libraries and redirect output to Zeppelin Notebook
-
-### 4.1 Zeppelin Notebook (NoteId=2C9HR8ADP)
 
 ```python
 %pyspark
@@ -96,39 +85,37 @@ from bokeh.plotting import figure
 output_notebook()
 ```
 
-### 4.2 Zeppelin Comm Layer Log File
+### 3.2 Zeppelin Comm Layer Log File
 
 ```
-2017-03-03 18:14:35,145 DEBUG:ZeppelinDisplayPublisher Publish html \n    <div class="bk-root">\n        <a href="http://bokeh.pydata.org" target="_blank" class="bk-logo bk-logo-small bk-logo-notebook"></a>\n        <span id="5d890ee3-7421-4247-9bac-0070db397bdf">Loading BokehJS ...</span>\n    </div>
-2017-03-03 18:14:35,147 DEBUG:ZeppelinSession Delayed printing of <div id="0d2fc49b-8f76-4b36-90d5-d27a4d0530ce"></div>
-2017-03-03 18:14:35,148 DEBUG:ZeppelinSession Sending task publish to $scope.____zeppelin_comm_2C9HR8ADP_msg__ for message {'html': '\n    <div class="bk-root">\n        <a href="http://bokeh.pydata.org" target="_blank" class="bk-logo bk-logo-small bk-logo-notebook"></a>\n        <span id="5d890ee3-7421-4247-9bac-0070db397bdf">Loading BokehJS ...</span>\n    </div>', 'div_id': '0d2fc49b-8f76-4b36-90d5-d27a4d0530ce'}
-2017-03-03 18:14:35,150 DEBUG:ZeppelinDisplayPublisher Publish javascript \n(function(global) {\n  function now() {\n    return new Date();\n  }\n\n  var force = "1";\n\n  if (typeof (window._bokeh_onload_callbacks) === "undefined" || force !== "") {\n    window._bokeh_onload_callbacks = [];\n    window._bokeh_is_loading = undefined;\n  }\n\n\n  \n  if (typeof (window._bokeh_timeout) === "undefined" || force !== "") {\n    window._bokeh_timeout = Date.now() + 5 [...(4363)]
-2017-03-03 18:14:35,152 DEBUG:ZeppelinSession Delayed printing of <div id="02afa5e9-1270-4172-bfac-7e80515a35c3"></div>
-2017-03-03 18:14:35,153 DEBUG:ZeppelinSession Sending task publish to $scope.____zeppelin_comm_2C9HR8ADP_msg__ for message {'html': '<script>\n(function(global) {\n  function now() {\n    return new Date();\n  }\n\n  var force = "1";\n\n  if (typeof (window._bokeh_onload_callbacks) === "undefined" || force !== "") {\n    window._bokeh_onload_callbacks = [];\n    window._bokeh_is_loading = undefined;\n  }\n\n\n  \n  if (typeof (window._b [...(4664)]
-```
-
-### 4.3 Browser Web Console
-
-```
-Angular script already executed, skipped                                                                               localhost:8080:38:9
-ZeppelinSession: publish 0d2fc49b-8f76-4b36-90d5-d27a4d0530ce                                                          localhost:8080:1:4150
-ZeppelinSession: publish 02afa5e9-1270-4172-bfac-7e80515a35c3                                                          localhost:8080:1:4150
-Bokeh: BokehJS not loaded, scheduling load and callback at Date 2017-03-03T17:14:35.595Z                               localhost:8080:61:5
-Bokeh: injecting script tag for BokehJS library:  "https://cdn.pydata.org/bokeh/release/bokeh-0.12.2.min.js"           localhost:8080:78:7
-Bokeh: injecting script tag for BokehJS library:  "https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.2.min.js"   localhost:8080:78:7
-Bokeh: injecting script tag for BokehJS library:  "https://cdn.pydata.org/bokeh/release/bokeh-compiler-0.12.2.min.js"  localhost:8080:78:7
-Bokeh: all BokehJS libraries loaded                                                                                    localhost:8080:71:11
-Bokeh: BokehJS plotting callback run at Date 2017-03-03T17:14:35.927Z                                                  localhost:8080:130:7
-Bokeh: setting log level to: 'info'                                                                                    bokeh-0.12.2.min.js:2:25032
-"Bokeh: injecting CSS: https://cdn.pydata.org/bokeh/release/bokeh-0.12.2.min.css"                                      localhost:8080:99:7
-"Bokeh: injecting CSS: https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.2.min.css"                              localhost:8080:101:7
-Bokeh: all callbacks have finished                                                                                     localhost:8080:48:5
+2017-03-11 19:21:24,563 DEBUG:ZeppelinDisplayPublisher Publish html \n    <div class="bk-root">\n        <a href="http://bokeh.pydata.org" target="_blank" class="bk-logo bk-logo-small bk-logo-notebook"></a>\n        <span id="c88ad21b-75c3-4b88-9fad-6332ceb1e126">Loading BokehJS ...</span>\n    </div>
+2017-03-11 19:21:24,564 DEBUG:ZeppelinDisplayPublisher Delayed printing of <div id="b7dcfee9-94e8-455b-baaf-d68f467315e4"></div>
+2017-03-11 19:21:24,574 DEBUG:ZeppelinDisplayPublisher Publish javascript \n(function(global) {\n  function now() {\n    return new Date();\n  }\n\n  var force = true;\n\n  if (typeof (window._bokeh_onload_callbacks) === "undefined" || force === true) {\n    window._bokeh_onload_callbacks = [];\n    window._bokeh_is_loading = undefined;\n  }\n\n\n  \n  if (typeof (window._bokeh_timeout) === "undefined" || force === true) {\n    window._bokeh_timeout = Date.now( [...(4379)]
+2017-03-11 19:21:24,574 DEBUG:ZeppelinDisplayPublisher Delayed printing of <div id="513e39b4-5d7b-49c3-9131-9722abfa426a"></div>
 ```
 
 
-## 5  Render a first plot
+### 3.3 Browser Web Console
 
-### 5.1 Zeppelin Notebook (NoteId=2C9HR8ADP)
+```
+Calling function __jupyterHandler with delay: 200
+ZeppelinSession: publish b7dcfee9-94e8-455b-baaf-d68f467315e4
+ZeppelinSession: publish 513e39b4-5d7b-49c3-9131-9722abfa426a
+Bokeh: BokehJS not loaded, scheduling load and callback at Sat Mar 11 2017 19:21:25 GMT+0100 (CET)
+Bokeh: injecting script tag for BokehJS library:  https://cdn.pydata.org/bokeh/release/bokeh-0.12.4.min.js
+Bokeh: injecting script tag for BokehJS library:  https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.4.min.js
+Bokeh: all BokehJS libraries loaded
+Bokeh: BokehJS plotting callback run at Sat Mar 11 2017 19:21:25 GMT+0100 (CET)
+[bokeh] setting log level to: 'info'
+Bokeh: injecting CSS: https://cdn.pydata.org/bokeh/release/bokeh-0.12.4.min.css
+Bokeh: injecting CSS: https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.4.min.css
+Bokeh: all callbacks have finished
+```
+
+
+## 4  Render a first plot
+
+### 4.1 Zeppelin Notebook (NoteId=2C9HR8ADP)
 
 ```python
 %pyspark
@@ -142,35 +129,32 @@ r2 = p2.circle([1,2,3], [4,5,6], size=20)
 handle1 = show(row(p1, p2), notebook_handle=True)
 ```
 
-### 5.2 Zeppelin Comm Layer Log File
+### 4.2 Zeppelin Comm Layer Log File
 
 ```
-2017-03-03 18:23:34,498 DEBUG:ZeppelinDisplayPublisher Publish html \n\n    <div class="bk-root">\n        <div class="plotdiv" id="738bad8c-37a7-4c12-a5f7-03847097ad65"></div>\n    </div>\n<script type="text/javascript">\n  \n  (function(global) {\n    function now() {\n      return new Date();\n    }\n  \n    var force = "";\n  \n    if (typeof (window._bokeh_onload_callbacks) === "undefined" || force !== "") {\n      window._bokeh_onload_callbacks = [];\n    [...(16954)]
-2017-03-03 18:23:34,500 DEBUG:ZeppelinSession Delayed printing of <div id="1e0c6c1c-d716-4aae-b5da-6da2eff5e7a3"></div>
-2017-03-03 18:23:34,501 DEBUG:ZeppelinSession Sending task publish to $scope.____zeppelin_comm_2C9HR8ADP_msg__ for message {'html': '\n\n    <div class="bk-root">\n        <div class="plotdiv" id="738bad8c-37a7-4c12-a5f7-03847097ad65"></div>\n    </div>\n<script type="text/javascript">\n  \n  (function(global) {\n    function now() {\n      return new Date();\n    }\n  \n    var force = "";\n  \n    if (typeof (window._bokeh_onload_call [...(17244)]
-2017-03-03 18:23:34,504 INFO:ZeppelinComm New ZeppelinComm for target 84ce1a2a-f1f8-4956-8eae-9a468deccba6
-2017-03-03 18:23:34,504 DEBUG:ZeppelinComm Register Comm 1c90308f-fc70-426d-b7e2-39c0475ce95e with CommManager ...
-2017-03-03 18:23:34,505 DEBUG:ZeppelinCommManager Registering comm 1c90308f-fc70-426d-b7e2-39c0475ce95e
-2017-03-03 18:23:34,505 DEBUG:ZeppelinComm ... and send comm_open for 1c90308f-fc70-426d-b7e2-39c0475ce95e to notebook
-2017-03-03 18:23:34,505 DEBUG:ZeppelinSession Sending task comm_open to $scope.____zeppelin_comm_2C9HR8ADP_msg__ for message {'comm_id': '1c90308f-fc70-426d-b7e2-39c0475ce95e', 'target_name': '84ce1a2a-f1f8-4956-8eae-9a468deccba6', 'data': {}, 'metadata': None}
+2017-03-11 19:23:34,029 DEBUG:ZeppelinDisplayPublisher Publish html \n\n    <div class="bk-root">\n        <div class="bk-plotdiv" id="6faf5afc-cd81-4dee-9d34-340607fcce2b"></div>\n    </div>\n<script type="text/javascript">\n  \n  (function(global) {\n    function now() {\n      return new Date();\n    }\n  \n    var force = false;\n  \n    if (typeof (window._bokeh_onload_callbacks) === "undefined" || force === true) {\n      window._bokeh_onload_callbacks = [...(17177)]
+2017-03-11 19:23:34,029 DEBUG:ZeppelinDisplayPublisher Delayed printing of <div id="0c8ea700-2e0b-4750-b332-a401289766b3"></div>
+2017-03-11 19:23:34,067 INFO:ZeppelinComm New ZeppelinComm for target c2573fd0-002e-491d-b95e-699d40f8558f
+2017-03-11 19:23:34,069 DEBUG:ZeppelinComm Register Comm 26d81593-4d7f-4dec-b1f1-826ad3f0651d with CommManager ...
+2017-03-11 19:23:34,069 DEBUG:ZeppelinCommManager Registering comm 26d81593-4d7f-4dec-b1f1-826ad3f0651d
+2017-03-11 19:23:34,069 DEBUG:ZeppelinComm ... and send comm_open for 26d81593-4d7f-4dec-b1f1-826ad3f0651d to notebook
 ```
 
-### 5.3 Browser Web Console
+### 4.3 Browser Web Console
 
 ```
-ZeppelinSession: publish 1e0c6c1c-d716-4aae-b5da-6da2eff5e7a3                                                     localhost:8080:1:4150
-Open comm for target_name84ce1a2a-f1f8-4956-8eae-9a468deccba6and comm id 1c90308f-fc70-426d-b7e2-39c0475ce95e     localhost:8080:1:3461
-CommManager: new_comm target: 84ce1a2a-f1f8-4956-8eae-9a468deccba6 comm_id: 1c90308f-fc70-426d-b7e2-39c0475ce95e  localhost:8080:1:1656
-Comm: Init                                                                                                        localhost:8080:1:42
-CommManager: register_comm comm_id: 1c90308f-fc70-426d-b7e2-39c0475ce95e                                          localhost:8080:1:2241
-CommManager: register_target: 84ce1a2a-f1f8-4956-8eae-9a468deccba6                                                localhost:8080:1:1943
-Bokeh: BokehJS plotting callback run at Date 2017-03-03T17:23:34.923Z                                             localhost:8080:130:9
-Bokeh: Registering Jupyter comms for target 84ce1a2a-f1f8-4956-8eae-9a468deccba6                                  bokeh-0.12.2.min.js:71:4825
-CommManager: register_target: 84ce1a2a-f1f8-4956-8eae-9a468deccba6                                                localhost:8080:1:1943
-Bokeh: all callbacks have finished                                                                                localhost:8080:52:7
-Comm: on_msg                                                                                                      localhost:8080:1:723
-Comm: register_callback for msg                                                                                   localhost:8080:1:597
-
-        
+Calling function __jupyterHandler with delay: 200
+ZeppelinSession: publish 0c8ea700-2e0b-4750-b332-a401289766b3
+Open comm for target_namec2573fd0-002e-491d-b95e-699d40f8558fand comm id 26d81593-4d7f-4dec-b1f1-826ad3f0651d
+CommManager: new_comm target: c2573fd0-002e-491d-b95e-699d40f8558f comm_id: 26d81593-4d7f-4dec-b1f1-826ad3f0651d
+Comm: Init
+CommManager: register_comm comm_id: 26d81593-4d7f-4dec-b1f1-826ad3f0651d
+CommManager: register_target: c2573fd0-002e-491d-b95e-699d40f8558f
+Bokeh: BokehJS plotting callback run at Sat Mar 11 2017 19:23:34 GMT+0100 (CET)
+[bokeh] Registering Jupyter comms for target c2573fd0-002e-491d-b95e-699d40f8558f
+CommManager: register_target: c2573fd0-002e-491d-b95e-699d40f8558f
+Bokeh: all callbacks have finished
+Comm: on_msg
+Comm: register_callback for msg      
 ```
 

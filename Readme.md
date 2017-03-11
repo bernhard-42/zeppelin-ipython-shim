@@ -8,16 +8,12 @@ Some visualisation libraries for Python can plot directly in Jupyter/IPython not
 2. Jupyter/IPython display and communication system
 3. ipywidgets
 
-[Apache Zeppelin](http://zeppelin.apache.org/) version 0.7.0+ will support plotting matplotlib inline.
-However, it is not compatible with option 2 and 3.
+[Apache Zeppelin](http://zeppelin.apache.org/) version 0.7.0+ will support plotting matplotlib inline. However, it is not compatible with option 2 and 3.
 
-This project creates a shim in [Apache Zeppelin](http://zeppelin.apache.org/) that simulates option 2, but does not cover option 3.
+This project creates a shim in [Apache Zeppelin](http://zeppelin.apache.org/) that simulates option 2, but does not cover option 3. It is based on the advanced Angular capabilities for Zeppelin ([ZeppelinSession](https://github.com/bernhard-42/advanced-angular-for-pyspark)).
 
-As an example it uses 
-
- - Bokeh 0.12.4+ to visualise (`output_notebook`) or modify (`push_notebook`) plots inline in [Apache Zeppelin](http://zeppelin.apache.org/).
- - Vega-Lite  1.3.1
-
+As an example it uses Bokeh 0.12.4+ to visualise (`output_notebook`) or modify (`push_notebook`) plots inline in [Apache Zeppelin](http://zeppelin.apache.org/).
+ 
 Tested with Python 2.7 (Ubuntu 16.10) and Python 3.5 (as of Anaconda3 4.2).
 
 
@@ -54,12 +50,14 @@ and minify the javascript files
 In Zeppelin Notebook
 
 ```python
-from zeppelin_comm_layer import ZeppelinCommLayer
+%pyspark
 
-# Note: Zeppelin Comm Layer is logging to 
-#       %ZEPPELIN_LOG_DIR/zeppelin-interpreter-pyspark-comm-layer-$USERNAME-$HOSTNAME.log
-import logging
-zcl = ZeppelinCommLayer(z.z, logLevel=logging.DEBUG)
+from zeppelin_comm_layer import ZeppelinCommLayer, resetZeppelinCommLayer, LogLevel
+
+# resetZeppelinCommLayer(z.z)
+LogLevel().setLogLevel("DEBUG")
+
+zcl = ZeppelinCommLayer(z.z)
 ```
 
 In the next Paragraph start the shim (note: this cannot be done in the paragraph above)
@@ -69,19 +67,9 @@ zcl.start()
 ```
 
 
-## 4 Supported Visualization libraries
+## 4 Test with Bokeh (http://bokeh.pydata.org)
 
-### 4.1 Bokeh (http://bokeh.pydata.org)
-
-Bokeh global state management depends on a global variable which is sufficient if there is a 1-to-1 relationship between a notebook and a kernel as with IPython.
-
-Zeppelin will have multiple notebooks for each interpreter, hence Bokeh state management needs to enhanced to support a state per Zeppelin Notebook (else `push_notebook`will fail when more than one tab with notebooks and Bokeh plots are open):
-
-```bash
-zcl.enableBokeh()
-```
-
-Note: The Zeppelin Comm Layer sessions also depend on Zeppelins `noteId`
+**Note:** Bokeh global state management depends on a global variable which is sufficient if there is a 1-to-1 relationship between a notebook and a kernel as with IPython. Zeppelin will have multiple notebooks for each interpreter, hence Bokeh state management needs to be enhanced to support a state per Zeppelin Notebook (else `push_notebook`will fail when more than one tab with notebooks and Bokeh plots are open). For a solution look at [Zeppelin Visualizations](https://github.com/bernhard-42/zeppelin-visualizations)
 
 Supported features
 
@@ -102,17 +90,6 @@ Supported features
 As an example view [ZeppelinCommLayer Overview.md](examples/Viewables/ZeppelinCommLayer Overview.md) or import [examples/ZeppelinCommLayer Overview.json](examples/ZeppelinCommLayer Overview.json) into Zeppelin
 
 For some of the Bokeh Gallery plots see [ZeppelinCommLayer Bokeh Gallery.md](examples/Viewables/ZeppelinCommLayer Bokeh Gallery.md) or import [examples/ZeppelinCommLayer Bokeh Gallery.json](examples/ZeppelinCommLayer Bokeh Gallery.json)
-
-
-### 4.2 Vega-Lite (https://vega.github.io/vega-lite/)
-
-Vega-Lite is a declarative graphics library. The integration allows to
-
-- Write Vega Lite Specs as python dicts
-- Overwrite plots (there is currently no interaction in Vega-Lite. However by being able to overwrite a plot, dynmic updates can be simulated)
-
-For how to use it, see [VegaLite - Overview.md](examples/Viewables/VegaLite - Overview.md) or import [examples/VegaLite - Overview.json](examples/VegaLite - Overview.json) into Zeppelin
-
 
 
 ## 5 Limitations:
@@ -138,7 +115,7 @@ This involves
   ```python
   from IPython.core.interactiveshell import InteractiveShell
   ip = InteractiveShell.instance()
-  ip.display_pub = ZeppelinDisplayPublisher(self)
+  ip.display_pub = ZeppelinDisplayPublisher(self.kernel)
 
   import ipykernel.comm
   ipykernel.comm.Comm = ZeppelinComm
@@ -150,10 +127,10 @@ This involves
 ### 6.2 Object hierarchy:
 
 ```
-Interpreter (Python)                                        Notebook (Javascript)
---------------------                                        ---------------------
+   Interpreter (Python)                                     Notebook (Javascript)
+   --------------------                                     ---------------------
 
-   ZeppelinCommLayer (S)                                          Jupyter
+   ZeppelinCommLayer (N)                                          Jupyter
           v                                                          v
 IPython InteractiveShell (S)                                     Notebook
           v                                                          v 
@@ -165,12 +142,13 @@ IPython InteractiveShell (S)                                     Notebook
      ZeppelinComm                                                  Comm
 
 
+(N) = Single Instance per Zeppelin Notebook
 (S) = Singleton
 ```
 
 ### 6.3 Startup Phase
 
-[Startup.md](Startup.md) shows per Notebook Paragraph (as in [examples/ZeppelinCommLayer Overview](examples/ZeppelinCommLayer Overview.json)):
+[Startup.md](Startup.md) shows per Notebook Paragraph (as in [notebooks/ZeppelinCommLayer Overview](examples/ZeppelinCommLayer Overview.json)):
 
 - Zeppelin notebook inputs 
 - Zeppelin Comm Layer log file per

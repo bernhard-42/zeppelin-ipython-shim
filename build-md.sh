@@ -2,7 +2,7 @@
 
 filename="${1%.*}"
 zeppelin2md "$1" "$(basename $(pwd))" -o "${filename}.md"
-mv "${filename}.md" examples/Viewables
+
 
 # convert ~/Downloads/bokeh_plot.png ~/Downloads/bokeh_plot\(1\).png +append bokeh-overview-1.2.png
 # convert -delay 100 -loop 0 bokeh2*.png bokeh-overview-2.gif
