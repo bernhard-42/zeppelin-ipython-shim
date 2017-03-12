@@ -87,9 +87,9 @@ Supported features
 
 - Bokeh Javascript Widgets interacting with the plot
 
-As an example view [ZeppelinCommLayer Overview.md](examples/Viewables/ZeppelinCommLayer Overview.md) or import [examples/ZeppelinCommLayer Overview.json](examples/ZeppelinCommLayer Overview.json) into Zeppelin
+As an example view [ZeppelinCommLayer Overview.md](notebooks/ZeppelinCommLayer Overview.md) or import [notebooks/ZeppelinCommLayer Overview.json](notebooks/ZeppelinCommLayer Overview.json) into Zeppelin
 
-For some of the Bokeh Gallery plots see [ZeppelinCommLayer Bokeh Gallery.md](examples/Viewables/ZeppelinCommLayer Bokeh Gallery.md) or import [examples/ZeppelinCommLayer Bokeh Gallery.json](examples/ZeppelinCommLayer Bokeh Gallery.json)
+For some of the Bokeh Gallery plots see [ZeppelinCommLayer Bokeh Gallery.md](notebooks/ZeppelinCommLayer Bokeh Gallery.md) or import [notebooks/ZeppelinCommLayer Bokeh Gallery.json](notebooks/ZeppelinCommLayer Bokeh Gallery.json)
 
 
 ## 5 Limitations:
