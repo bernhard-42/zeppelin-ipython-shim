@@ -32,22 +32,23 @@ class Kernel:
         self.logger.info("Create CommManager")
         self.comm_manager = ZeppelinCommManager()
 
-    def initSession(self, _tag):
-        self.session.init(_tag)
-
     def startSession(self, _tag):
+        self.logger.debug("Start ZeppelinSession %s" % self.getSessionId())
         self.session.start(_tag)
 
     def resetSession(self):
+        self.logger.debug("Reset ZeppelinSession %s" % self.getSessionId())
         self.session._reset()
 
     def getSessionId(self):
         return self.session.sessionId
         
     def registerFunction(self, name, jsFunc):
+        self.logger.debug("Register Function %s for ZeppelinSession %s" % (name, self.getSessionId()))
         self.session.registerFunction(name, jsFunc)
 
     def unregisterFunction(self, name):
+        self.logger.debug("Unregister Function %s for ZeppelinSession %s" % (name, self.getSessionId()))
         self.session.unregisterFunction(name)
 
     def send(self, task, msg):

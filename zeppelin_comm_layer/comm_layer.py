@@ -87,13 +87,6 @@ def ZeppelinCommLayer(zeppelinContext, _tag="%angular", _logLen=400):
             self.logger.debug("Setting IPython Display Manager")
             self.ip.display_pub = ZeppelinDisplayPublisher(self.kernel)
         
-        #
-        # needs to be called every time ZeppelinCommLayer() gets called to initialize the 
-        # ZeppelinSession, see wrapping factory function
-        #
-        def init(self):
-            self.kernel.initSession(self._tag)
-
 
         def start(self, _tag="%angular"):
             self.logger.info("Starting Comm Layer Watcher")
@@ -123,15 +116,19 @@ def ZeppelinCommLayer(zeppelinContext, _tag="%angular", _logLen=400):
                                     else __ZEPPELIN_COMM_LAYER.get(noteId).commLayerId))
 
     if __ZEPPELIN_COMM_LAYER.get(noteId) is None:
+        logger.debug("A new ZeppelinCommLayer will be created for noteId %s" % noteId)
         __ZEPPELIN_COMM_LAYER[noteId] = ZeppelinCommLayer(zeppelinContext, _tag, _logLen)
+    else:
+        logger.debug("Return existing ZeppelinCommLayer")   
+
     
-    logger.debug("Notebook: %s ZeppelinCommLayer: %s (Session ID: %s)" %
+    logger.info("Notebook: %s ZeppelinCommLayer: %s (Session ID: %s)" %
                     (noteId, 
                      __ZEPPELIN_COMM_LAYER.get(noteId).commLayerId,
                      __ZEPPELIN_COMM_LAYER.get(noteId).kernel.getSessionId()))
     
-    # Force ZeppelinSession.init()
-    __ZEPPELIN_COMM_LAYER[noteId].init()
+    # Force ZeppelinCommLayer.init()
+    # __ZEPPELIN_COMM_LAYER[noteId].init()
 
     return __ZEPPELIN_COMM_LAYER[noteId]
 
